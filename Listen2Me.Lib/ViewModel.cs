@@ -18,6 +18,14 @@
         }
         #endregion
 
+        #region Private Fields
+
+        #endregion
+
+        #region Public Properties
+
+        #endregion
+
         #region Commands
         public ICommand Stop { get; set; }
         public ICommand PlayPauseCommand { get; set; }
