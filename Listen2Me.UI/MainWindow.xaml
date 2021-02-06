@@ -1,0 +1,209 @@
+﻿<Window x:Class="Listen2Me.UI.MainWindow"
+        x:Name="window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Listen2Me.UI"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:library="clr-namespace:Listen2Me.Lib;assembly=Listen2Me.Lib"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        FontFamily="Segoe UI"
+        BorderThickness="1"
+        FontSize="16"
+        BorderBrush="{StaticResource BorderBrush}"
+        Background="{StaticResource BackgroundColorBrush}"
+        Foreground="{StaticResource GradientForeground}"
+        Title="Listen2Me" Height="450" Width="400">
+
+    <Window.DataContext>
+        <library:ViewModel/>
+    </Window.DataContext>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome 
+            x:Name="windowChrome"
+            CaptionHeight="20"/>
+    </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <Style
+        TargetType="Button"
+        x:Key="PlayerButton"
+        BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0 0 0 10"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="25"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource GradientForeground}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style
+        TargetType="Button"
+        x:Key="TitleBarButton"
+        BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource GradientForeground}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF7A3200"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#FF562B00"/>
+                    <Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth2"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type local:SmoothScrollViewer}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type local:SmoothScrollViewer}">
+                        <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Rectangle 
+								Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" 
+								x:Name="Corner" 
+								Grid.Column="1" 
+								Grid.Row="1"/>
+                            <ScrollContentPresenter 
+								Margin="{TemplateBinding Padding}" 
+								x:Name="PART_ScrollContentPresenter" 
+								Grid.Column="0" 
+								Grid.Row="0" 
+								Content="{TemplateBinding Content}" 
+								ContentTemplate="{TemplateBinding ContentTemplate}" 
+								CanContentScroll="{TemplateBinding CanContentScroll}" 
+								CanHorizontallyScroll="False" 
+								CanVerticallyScroll="False"/>
+                            <ScrollBar 
+								Cursor="Arrow" 
+								x:Name="PART_VerticalScrollBar" 
+								Visibility="Collapsed" 
+								Grid.Column="1" 
+								Grid.Row="0" 
+								ViewportSize="{TemplateBinding ViewportHeight}" 
+								Maximum="{TemplateBinding ScrollableHeight}" 
+								Minimum="0" 
+								Value="{Binding Path=VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" 
+								AutomationProperties.AutomationId="VerticalScrollBar"/>
+                            <ScrollBar 
+								Cursor="Arrow" 
+								x:Name="PART_AniVerticalScrollBar" 
+								Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" 
+								Grid.Column="1" 
+								Grid.Row="0" 
+								ViewportSize="{TemplateBinding ViewportHeight}" 
+								Maximum="{TemplateBinding ScrollableHeight}" 
+								Minimum="0"							
+								Value="0"
+								AutomationProperties.AutomationId="VerticalScrollBar"/>
+                            <ScrollBar 
+								Cursor="Arrow" 
+								x:Name="PART_HorizontalScrollBar" 
+								Visibility="Collapsed" 
+								Grid.Column="0" 
+								Grid.Row="1" 
+								Orientation="Horizontal" 
+								ViewportSize="{TemplateBinding ViewportWidth}" 
+								Maximum="{TemplateBinding ScrollableWidth}" 
+								Minimum="0" 
+								Value="{Binding Path=HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" 
+								AutomationProperties.AutomationId="HorizontalScrollBar"/>
+                            <ScrollBar 
+								Cursor="Arrow" 
+								x:Name="PART_AniHorizontalScrollBar" 
+								Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" 
+								Orientation="Horizontal" 
+								ViewportSize="{TemplateBinding ViewportWidth}" 
+								Maximum="{TemplateBinding ScrollableWidth}" 
+								Minimum="0"
+								Value="0"
+								AutomationProperties.AutomationId="HorizontalScrollBar" Grid.Row="1"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding ElementName=windowChrome, Path=CaptionHeight}"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title bar -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="{Binding ElementName=MinimizeWindow, Path=Width}"/>
+                <ColumnDefinition Width="{Binding ElementName=MinimizeWindow, Path=Width}"/>
+                <ColumnDefinition Width="{Binding ElementName=MinimizeWindow, Path=Width}"/>
+                <ColumnDefinition Width="{Binding ElementName=MinimizeWindow, Path=Width}"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}},Path=Title,FallbackValue=Listen2Me}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Grid.ColumnSpan="4"/>
+
+            <Button
+                x:Name="Options"
+                Grid.Column="1"
+                Style="{StaticResource TitleBarButton}"
+                Content="{materialDesign:PackIcon Kind=Settings,Size=15}"/>
+            <Button
+                x:Name="MinimizeWindow"
+                Grid.Column="2"
+                Click="MinimizeWindowAction"
+                Style="{StaticResource TitleBarButton}"
+                Content="{materialDesign:PackIcon Kind=WindowMinimize,Size=15}"/>
+            <Button
+                Grid.Column="3"
+                Click="MaximizeWindow"
+                Style="{StaticResource TitleBarButton}"
+                Content="{materialDesign:PackIcon Kind=WindowMaximize,Size=15}"/>
+            <Button
+                Grid.Column="4"
+                Click="CloseWindow"
+                Content="{materialDesign:PackIcon Kind=Close,Size=15}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource GradientForeground}"/>
+                                <Setter Property="Background" Value="#FF970000"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#FF740000"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- Just a simple separator. -->
+            <local:Separator
+                Grid.ColumnSpan="5"
+                VerticalAlignment="Bottom"/>
+        </Grid>
+
+    </Grid>
+</Window>

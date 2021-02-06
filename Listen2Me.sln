@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Listen2Me.UI", "Listen2Me.UI\Listen2Me.UI.csproj", "{2EDC15C2-A1E5-4FED-AB99-50FBF65E2718}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Listen2Me.Lib", "Listen2Me.Lib\Listen2Me.Lib.csproj", "{43E68798-DC78-4127-B6D4-0AA2E635662E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EDC15C2-A1E5-4FED-AB99-50FBF65E2718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EDC15C2-A1E5-4FED-AB99-50FBF65E2718}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EDC15C2-A1E5-4FED-AB99-50FBF65E2718}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EDC15C2-A1E5-4FED-AB99-50FBF65E2718}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E68798-DC78-4127-B6D4-0AA2E635662E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E68798-DC78-4127-B6D4-0AA2E635662E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E68798-DC78-4127-B6D4-0AA2E635662E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E68798-DC78-4127-B6D4-0AA2E635662E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC6B8270-37F4-4DF4-BDEF-DD71666C4DF7}
+	EndGlobalSection
+EndGlobal
