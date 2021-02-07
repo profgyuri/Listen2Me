@@ -205,5 +205,7 @@
                 VerticalAlignment="Bottom"/>
         </Grid>
 
+        <TextBox Text="{Binding ElapsedSeconds, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
+
     </Grid>
 </Window>
