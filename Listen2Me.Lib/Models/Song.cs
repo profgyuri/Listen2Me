@@ -8,15 +8,16 @@
         public string Artist { get; set; }
         public string Title { get; set; }
         public string Genre { get; set; }
+        public string BPM { get; set; }
+        public string Bitrate { get; set; }
 
         public string Display
         {
             get
             {
-                return !string.IsNullOrEmpty(Artist) && !string.IsNullOrEmpty(Title) ?
-                    $"{Artist} - {Title}" :
-                    !string.IsNullOrEmpty(Title) ? $"{Title}" :
-                    $"{Path.Split('\\', '/')[^1]}";
+                return string.IsNullOrEmpty(Artist) && string.IsNullOrEmpty(Title) ?
+                    $"{Path.Split('\\', '/')[^1]}" :
+                    $"{Artist} - {Title}";
             }
         }
 

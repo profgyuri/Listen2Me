@@ -3,7 +3,7 @@
     using Autofac;
 
     using Listen2Me.Lib.Models;
-
+    using Listen2Me.Lib.Utilities;
     using LowLevelKeyboardHook;
 
     using System;
@@ -11,8 +11,8 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
-    using System.Windows.Input;
     using System.Timers;
+    using System.Windows.Input;
 
     using IContainer = Autofac.IContainer;
 
@@ -38,8 +38,6 @@
         private KeyboardHook keyboardHook;
 
         private int playingIndex;
-
-        private Timer timer;
         #endregion
 
         #region Public Properties
@@ -68,7 +66,7 @@
         }
         public double TotalSeconds
         {
-            get => playingIndex < SongList?.Count ? SongList[playingIndex].Length.TotalSeconds : 1;
+            get => LoadedSong?.Length.TotalSeconds ?? 1;
             set
             {
                 if (SongList?[playingIndex] is { })
@@ -77,6 +75,7 @@
                 }
             }
         }
+
         #endregion
 
         #region Commands
@@ -91,6 +90,25 @@
         {
             CommandInit();
             DependencyInit();
+
+            //The sole puprose of the 5 lines below is to help me make the UI.
+            LoadedSong = SongAnalyzer.Analyze(@"e:\Zene\Hardstyle\The Prophet & Devin Wild ft. Remi - All In My Head.wav");
+            musicPlayer.LoadNewAudio(LoadedSong);
+            OnPropertyChanged(nameof(TotalSeconds));
+
+            SongList.Add(LoadedSong);
+            SongList.Add(LoadedSong);
+
+            Timer timer = new Timer();
+            timer.AutoReset = true;
+            timer.Enabled = true;
+            timer.Interval = 100;
+            timer.Elapsed += Timer_Elapsed;
+        }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            OnPropertyChanged(nameof(ElapsedSeconds));
         }
 
         #region Initializers
@@ -102,25 +120,8 @@
 
             keyboardHook = new KeyboardHook(new List<ConsoleKey>() { ConsoleKey.MediaNext, ConsoleKey.MediaPlay, ConsoleKey.MediaPrevious, ConsoleKey.MediaStop });
             keyboardHook.KeyboardPressed += KeyboardHook_KeyboardPressed;
-        }
 
-        /// <summary>
-        /// Handles the tick event of the <see cref="Timer"/>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            OnPropertyChanged(nameof(ElapsedSeconds));
-            if (ElapsedSeconds >= TotalSeconds - 1 && musicPlayer.PlaybackState == PlayBackState.Stopped && musicPlayer.HasAudio)
-            {
-                SkipSong(true);
-            }
-
-            if (SongList?.Count > 0)
-            {
-                IsSkipToNextEnabled = true;
-            }
+            SongList = new ObservableCollection<Song>();
         }
 
         private void CommandInit()

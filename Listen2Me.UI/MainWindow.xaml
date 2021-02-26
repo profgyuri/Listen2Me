@@ -148,7 +148,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Title bar -->
+        <!--#region Title bar -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -204,8 +204,161 @@
                 Grid.ColumnSpan="5"
                 VerticalAlignment="Bottom"/>
         </Grid>
+        <!--#endregion-->
+        
+        <!--#region UI-->
+        <Grid
+            Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Sliders -->
+            <Slider
+                x:Name="VolumeSlider"
+                Grid.Column="1"
+                Grid.RowSpan="2"
+                Orientation="Vertical"
+                HorizontalAlignment="Center"
+                Minimum="0"
+                Maximum="1"
+                TickFrequency="0.01"
+                Ticks="100"
+                Value="{Binding Volume}"
+                Margin="0 10 0 10"
+                Foreground="{StaticResource GradientForeground}"/>
 
-        <TextBox Text="{Binding ElapsedSeconds, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
+            <Slider
+                x:Name="TimeSlider"
+                VerticalAlignment="Center"
+                Margin="10 7 10 0"
+                TickFrequency="1"
+                Minimum="0"
+                Maximum="{Binding TotalSeconds}"
+                Value="{Binding ElapsedSeconds}"
+                Foreground="{StaticResource GradientForeground}"/>
+
+            <TextBlock Text="{Binding ThreadID}" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+            <!--Buttons-->
+            <Grid
+                Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <!--Previous-->
+                    <ColumnDefinition Width="*"/>
+                    <!--Stop-->
+                    <ColumnDefinition Width="*"/>
+                    <!--Play/Pause-->
+                    <ColumnDefinition Width="*"/>
+                    <!--Next-->
+                    <ColumnDefinition Width="*"/>
+                    <!--Shuffle mode-->
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    Content="{materialDesign:PackIcon Kind=SkipPrevious, Size=20}"
+                    Style="{StaticResource PlayerButton}"
+                    IsEnabled="{Binding IsSkipToPreviousEnabled}"
+                    Command="{Binding SkipToPrevious}"/>
+                <Button
+                    Grid.Column="1"
+                    Content="{materialDesign:PackIcon Kind=Stop, Size=20}"
+                    Style="{StaticResource PlayerButton}"
+                    Command="{Binding Stop}"/>
+                <Button
+                    Grid.Column="2"
+                    Content="{materialDesign:PackIcon Kind=PlayPause, Size=20}"
+                    Style="{StaticResource PlayerButton}"
+                    Command="{Binding PlayPauseCommand}"/>
+                <Button
+                    Grid.Column="3"
+                    Content="{materialDesign:PackIcon Kind=SkipNext, Size=20}"
+                    Style="{StaticResource PlayerButton}"
+                    IsEnabled="{Binding IsSkipToNextEnabled}"
+                    Command="{Binding SkipToNext}"/>
+                <Button
+                    Grid.Column="4"
+                    Content="{materialDesign:PackIcon Kind=Shuffle, Size=20}"
+                    Style="{StaticResource PlayerButton}"
+                    IsEnabled="{Binding IsShuffleEnabled}"
+                    Command="{Binding Shuffle}"/>
+
+            </Grid>
+
+            <ListView
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                ItemsSource="{Binding SongList}"
+                SelectedItem="{Binding SelectedSong}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.CanContentScroll="True"
+                ScrollViewer.IsDeferredScrollingEnabled="True"
+                Foreground="{StaticResource GradientForeground}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <local:Separator
+                                Grid.RowSpan="2"
+                                VerticalAlignment="Bottom"/>
+
+                            <TextBlock
+                                Text="{Binding Display, FallbackValue=Track}"
+                                TextTrimming="CharacterEllipsis"
+                                HorizontalAlignment="Center"
+                                FontWeight="Bold"/>
+
+                            <Grid
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
+                                Margin="0 0 0 5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    Text="{Binding BPM, FallbackValue=BPM}"
+                                    TextTrimming="CharacterEllipsis"
+                                    HorizontalAlignment="Center"/>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding Bitrate, FallbackValue=Bitrate}"
+                                    TextTrimming="CharacterEllipsis"
+                                    HorizontalAlignment="Center"/>
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Text="{Binding Length, StringFormat={}{0:hh\\:mm\\:ss\\.f}, FallbackValue=Length}"
+                                    TextTrimming="CharacterEllipsis"
+                                    HorizontalAlignment="Center"/>
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Text="{Binding Genre, FallbackValue=Genre}"
+                                    TextTrimming="CharacterEllipsis"
+                                    HorizontalAlignment="Center"/>
+                            </Grid>                            
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <!--#endregion-->
 
     </Grid>
 </Window>

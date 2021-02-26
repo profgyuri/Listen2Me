@@ -24,6 +24,8 @@
                     song.Artist = string.Join(";", file.Tag.Performers);
                     song.Title = file.Tag.Title;
                     song.Genre = string.Join(";", file.Tag.Genres);
+                    song.BPM = file.Tag.BeatsPerMinute + " BPM";
+                    song.Bitrate = file.Properties.AudioBitrate + " kbps";
                     song.Length = file.Properties.Duration;
                     song.Path = path;
                 }
