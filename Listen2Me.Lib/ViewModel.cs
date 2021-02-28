@@ -41,8 +41,10 @@
         #endregion
 
         #region Public Properties
-        public ObservableCollection<Song> SongList { get; set; }
-        public Song SelectedSong { get; set; }
+        public ObservableCollection<Song> PlayList { get; set; }
+        public Song SelectedPlayListSong { get; set; }
+        public ObservableCollection<Song> SearchList { get; set; }
+        public Song SelectedSearchListSong { get; set; }
         public Song LoadedSong { get; set; }
 
         public bool IsSkipToPreviousEnabled { get; set; }
@@ -69,9 +71,9 @@
             get => LoadedSong?.Length.TotalSeconds ?? 1;
             set
             {
-                if (SongList?[playingIndex] is { })
+                if (PlayList?[playingIndex] is { })
                 {
-                    SongList[playingIndex].Length = TimeSpan.FromSeconds(value);
+                    PlayList[playingIndex].Length = TimeSpan.FromSeconds(value);
                 }
             }
         }
@@ -96,8 +98,8 @@
             musicPlayer.LoadNewAudio(LoadedSong);
             OnPropertyChanged(nameof(TotalSeconds));
 
-            SongList.Add(LoadedSong);
-            SongList.Add(LoadedSong);
+            PlayList.Add(LoadedSong);
+            PlayList.Add(LoadedSong);
 
             Timer timer = new Timer();
             timer.AutoReset = true;
@@ -121,7 +123,7 @@
             keyboardHook = new KeyboardHook(new List<ConsoleKey>() { ConsoleKey.MediaNext, ConsoleKey.MediaPlay, ConsoleKey.MediaPrevious, ConsoleKey.MediaStop });
             keyboardHook.KeyboardPressed += KeyboardHook_KeyboardPressed;
 
-            SongList = new ObservableCollection<Song>();
+            PlayList = new ObservableCollection<Song>();
         }
 
         private void CommandInit()
@@ -178,19 +180,19 @@
         {
             if (skipToNext)
             {
-                playingIndex = ++playingIndex % SongList.Count;
+                playingIndex = ++playingIndex % PlayList.Count;
             }
             else if (playingIndex == 0)
             {
-                playingIndex = SongList.Count - 1;
+                playingIndex = PlayList.Count - 1;
             }
             else
             {
                 --playingIndex;
             }
 
-            LoadedSong = SongList[playingIndex];
-            SelectedSong = LoadedSong;
+            LoadedSong = PlayList[playingIndex];
+            SelectedPlayListSong = LoadedSong;
 
             musicPlayer.LoadNewAudio(LoadedSong);
             OnPropertyChanged(nameof(TotalSeconds));
