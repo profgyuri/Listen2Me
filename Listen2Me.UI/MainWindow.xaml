@@ -35,7 +35,6 @@
             BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
             <Setter Property="Padding" Value="0"/>
-            <Setter Property="Margin" Value="0 0 0 10"/>
             <Setter Property="Height" Value="20"/>
             <Setter Property="Width" Value="25"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -144,6 +143,8 @@
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="0 10 0 0"/>
+            <Setter Property="FontSize" Value="10"/>
             <Setter Property="Foreground" Value="{StaticResource GradientForeground}"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
             <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
@@ -151,11 +152,16 @@
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <Grid>
+                        <Grid
+                            ToolTip="{Binding Display}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
+
+                            <Rectangle
+                                Grid.RowSpan="2"
+                                Fill="Transparent"/>
 
                             <local:Separator
                                 Grid.Row="1"
@@ -163,6 +169,7 @@
 
                             <TextBlock
                                 Text="{Binding Display, FallbackValue=Track}"
+                                FontSize="11"
                                 TextTrimming="CharacterEllipsis"
                                 HorizontalAlignment="Center"
                                 FontWeight="Bold"/>
@@ -298,6 +305,7 @@
                 Foreground="{StaticResource GradientForeground}"/>
 
             <Slider
+                Grid.Row="1"
                 x:Name="TimeSlider"
                 VerticalAlignment="Center"
                 Margin="10 7 10 0"
@@ -307,52 +315,113 @@
                 Value="{Binding ElapsedSeconds}"
                 Foreground="{StaticResource GradientForeground}"/>
 
-            <TextBlock Text="{Binding ThreadID}" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-            <!--Buttons-->
             <Grid
-                Grid.Row="1">
+                Margin="0 5 0 0">
                 <Grid.ColumnDefinitions>
-                    <!--Previous-->
                     <ColumnDefinition Width="*"/>
-                    <!--Stop-->
-                    <ColumnDefinition Width="*"/>
-                    <!--Play/Pause-->
-                    <ColumnDefinition Width="*"/>
-                    <!--Next-->
-                    <ColumnDefinition Width="*"/>
-                    <!--Shuffle mode-->
+                    <ColumnDefinition Width="15"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button
-                    Content="{materialDesign:PackIcon Kind=SkipPrevious, Size=20}"
-                    Style="{StaticResource PlayerButton}"
-                    IsEnabled="{Binding IsSkipToPreviousEnabled}"
-                    Command="{Binding SkipToPrevious}"/>
-                <Button
-                    Grid.Column="1"
-                    Content="{materialDesign:PackIcon Kind=Stop, Size=20}"
-                    Style="{StaticResource PlayerButton}"
-                    Command="{Binding Stop}"/>
-                <Button
-                    Grid.Column="2"
-                    Content="{materialDesign:PackIcon Kind=PlayPause, Size=20}"
-                    Style="{StaticResource PlayerButton}"
-                    Command="{Binding PlayPauseCommand}"/>
-                <Button
-                    Grid.Column="3"
-                    Content="{materialDesign:PackIcon Kind=SkipNext, Size=20}"
-                    Style="{StaticResource PlayerButton}"
-                    IsEnabled="{Binding IsSkipToNextEnabled}"
-                    Command="{Binding SkipToNext}"/>
-                <Button
-                    Grid.Column="4"
-                    Content="{materialDesign:PackIcon Kind=Shuffle, Size=20}"
-                    Style="{StaticResource PlayerButton}"
-                    IsEnabled="{Binding IsShuffleEnabled}"
-                    Command="{Binding Shuffle}"/>
+                <!-- Buttons -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <!--Previous-->
+                        <ColumnDefinition Width="*"/>
+                        <!--Stop-->
+                        <ColumnDefinition Width="*"/>
+                        <!--Play/Pause-->
+                        <ColumnDefinition Width="*"/>
+                        <!--Next-->
+                        <ColumnDefinition Width="*"/>
+                        <!--Shuffle mode-->
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
+                    <Button
+                        Content="{materialDesign:PackIcon Kind=SkipPrevious, Size=20}"
+                        Style="{StaticResource PlayerButton}"
+                        IsEnabled="{Binding IsSkipToPreviousEnabled}"
+                        Command="{Binding SkipToPrevious}"/>
+                    <Button
+                        Grid.Column="1"
+                        Content="{materialDesign:PackIcon Kind=Stop, Size=20}"
+                        Style="{StaticResource PlayerButton}"
+                        Command="{Binding Stop}"/>
+                    <Button
+                        Grid.Column="2"
+                        Content="{materialDesign:PackIcon Kind=PlayPause, Size=20}"
+                        Style="{StaticResource PlayerButton}"
+                        Command="{Binding PlayPauseCommand}"/>
+                    <Button
+                        Grid.Column="3"
+                        Content="{materialDesign:PackIcon Kind=SkipNext, Size=20}"
+                        Style="{StaticResource PlayerButton}"
+                        IsEnabled="{Binding IsSkipToNextEnabled}"
+                        Command="{Binding SkipToNext}"/>
+                    <Button
+                        Grid.Column="4"
+                        Content="{materialDesign:PackIcon Kind=Shuffle, Size=20}"
+                        Style="{StaticResource PlayerButton}"
+                        IsEnabled="{Binding IsShuffleEnabled}"
+                        Command="{Binding Shuffle}"/>
+
+                </Grid>
+
+                <local:Separator
+                    Grid.Column="1"/>
+
+                <Grid
+                    Grid.Column="2"
+                    Margin="5 0"
+                    ToolTip="{Binding LoadedSong.Display}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Rectangle
+                        Grid.RowSpan="2"
+                        Fill="Transparent"/>
+
+                    <TextBlock
+                        Text="{Binding LoadedSong.Display, FallbackValue=Track}"
+                        TextTrimming="CharacterEllipsis"
+                        HorizontalAlignment="Center"
+                        FontWeight="Bold"/>
+
+                    <Grid
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Text="{Binding LoadedSong.BPM, FallbackValue=BPM}"
+                            TextTrimming="CharacterEllipsis"
+                            HorizontalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding LoadedSong.Bitrate, FallbackValue=Bitrate}"
+                            TextTrimming="CharacterEllipsis"
+                            HorizontalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Column="2"
+                            Text="{Binding LoadedSong.Length, StringFormat={}{0:hh\\:mm\\:ss\\.f}, FallbackValue=Length}"
+                            TextTrimming="CharacterEllipsis"
+                            HorizontalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Column="3"
+                            Text="{Binding LoadedSong.Genre, FallbackValue=Genre}"
+                            TextTrimming="CharacterEllipsis"
+                            HorizontalAlignment="Center"/>
+                    </Grid>
+                </Grid>
             </Grid>
 
             <Grid
@@ -361,14 +430,27 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Text="Search Results"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    HorizontalAlignment="Center"/>
 
                 <ListView
                     x:Name="SearchResultList"
+                    Grid.Row="1"
                     ItemsSource="{Binding SearchList}"
                     SelectedItem="{Binding SelectedSearchListSong}"/>
 
                 <Rectangle
+                    Grid.RowSpan="2"
                     HorizontalAlignment="Right"
+                    VerticalAlignment="Stretch"
                     Width="1">
                     <Rectangle.Fill>
                         <RadialGradientBrush RadiusX="0.65">
@@ -378,8 +460,16 @@
                     </Rectangle.Fill>
                 </Rectangle>
 
+                <TextBlock
+                    Text="PlayList"
+                    Grid.Column="1"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    HorizontalAlignment="Center"/>
+
                 <ListView
                     Grid.Column="1"
+                    Grid.Row="1"
                     x:Name="PlayList"
                     ItemsSource="{Binding PlayList}"
                     SelectedItem="{Binding SelectedPlayListSong}"/>
