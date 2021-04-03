@@ -301,11 +301,11 @@
             KeyTime targetKeyTime = thisScrollViewer.ScrollingTime;
             KeySpline targetKeySpline = thisScrollViewer.ScrollingSpline;
 
-            DoubleAnimationUsingKeyFrames animateHScrollKeyFramed = new DoubleAnimationUsingKeyFrames();
-            DoubleAnimationUsingKeyFrames animateVScrollKeyFramed = new DoubleAnimationUsingKeyFrames();
+            DoubleAnimationUsingKeyFrames animateHScrollKeyFramed = new();
+            DoubleAnimationUsingKeyFrames animateVScrollKeyFramed = new();
 
-            SplineDoubleKeyFrame HScrollKey1 = new SplineDoubleKeyFrame(thisScrollViewer.TargetHorizontalOffset, targetKeyTime, targetKeySpline);
-            SplineDoubleKeyFrame VScrollKey1 = new SplineDoubleKeyFrame(thisScrollViewer.TargetVerticalOffset, targetKeyTime, targetKeySpline);
+            SplineDoubleKeyFrame HScrollKey1 = new(thisScrollViewer.TargetHorizontalOffset, targetKeyTime, targetKeySpline);
+            SplineDoubleKeyFrame VScrollKey1 = new(thisScrollViewer.TargetVerticalOffset, targetKeyTime, targetKeySpline);
             animateHScrollKeyFramed.KeyFrames.Add(HScrollKey1);
             animateVScrollKeyFramed.KeyFrames.Add(VScrollKey1);
 

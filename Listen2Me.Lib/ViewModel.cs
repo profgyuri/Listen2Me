@@ -94,14 +94,14 @@
             DependencyInit();
 
             //The sole puprose of the 5 lines below is to help me make the UI.
-            LoadedSong = SongAnalyzer.Analyze(@"e:\Zene\Hardstyle\The Prophet & Devin Wild ft. Remi - All In My Head.wav");
+            LoadedSong = SongAnalyzer.Analyze(@"e:\Zene\Hardstyle\Brennan Heart & Toneshifterz - Define Yourself.mp3");
             musicPlayer.LoadNewAudio(LoadedSong);
             OnPropertyChanged(nameof(TotalSeconds));
 
             PlayList.Add(LoadedSong);
             PlayList.Add(LoadedSong);
 
-            Timer timer = new Timer();
+            Timer timer = new();
             timer.AutoReset = true;
             timer.Enabled = true;
             timer.Interval = 100;

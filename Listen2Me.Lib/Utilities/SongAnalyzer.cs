@@ -17,7 +17,7 @@
         {
             if (File.Exists(path))
             {
-                Song song = new Song();
+                Song song = new();
                 TagLib.File file = TagLib.File.Create(path);
                 try
                 {

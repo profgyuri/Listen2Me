@@ -7,7 +7,7 @@
     {
         public static IContainer Configure()
         {
-            ContainerBuilder builder = new ContainerBuilder();
+            ContainerBuilder builder = new();
 
             builder.RegisterType<MusicPlayer>().As<IMusicPlayer>();
 

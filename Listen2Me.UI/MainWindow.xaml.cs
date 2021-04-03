@@ -28,5 +28,10 @@
         {
             window.WindowState = window.WindowState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
         }
+
+        private void OpenSettings(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -93,7 +93,7 @@
             GetCursorPos(out POINT lMousePosition);
 
             IntPtr lPrimaryScreen = MonitorFromPoint(new POINT(0, 0), MonitorOptions.MONITOR_DEFAULTTOPRIMARY);
-            MONITORINFO lPrimaryScreenInfo = new MONITORINFO();
+            MONITORINFO lPrimaryScreenInfo = new();
             if (!GetMonitorInfo(lPrimaryScreen, lPrimaryScreenInfo))
             {
                 return;
@@ -134,8 +134,8 @@
     public class MONITORINFO
     {
         public int cbSize = Marshal.SizeOf(typeof(MONITORINFO));
-        public Rectangle rcMonitor = new Rectangle();
-        public Rectangle rcWork = new Rectangle();
+        public Rectangle rcMonitor = new();
+        public Rectangle rcWork = new();
         public int dwFlags = 0;
     }
 

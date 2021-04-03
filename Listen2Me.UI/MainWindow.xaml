@@ -26,7 +26,7 @@
     <WindowChrome.WindowChrome>
         <WindowChrome 
             x:Name="windowChrome"
-            CaptionHeight="20"/>
+            CaptionHeight="24"/>
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
@@ -215,6 +215,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="{Binding ElementName=windowChrome, Path=CaptionHeight}"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -237,6 +238,7 @@
             <Button
                 x:Name="Options"
                 Grid.Column="1"
+                Click="OpenSettings"
                 Style="{StaticResource TitleBarButton}"
                 Content="{materialDesign:PackIcon Kind=Settings,Size=15}"/>
             <Button
@@ -268,16 +270,16 @@
                     </Style>
                 </Button.Style>
             </Button>
-
-            <!-- Just a simple separator. -->
-            <local:Separator
-                Grid.ColumnSpan="5"
-                VerticalAlignment="Bottom"/>
         </Grid>
+
+        <!-- Just a simple separator. -->
+        <local:Separator
+                Grid.Row="1"
+                VerticalAlignment="Bottom"/>
 
         <!--UI-->
         <Grid
-            Grid.Row="1">
+            Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
