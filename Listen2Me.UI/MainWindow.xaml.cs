@@ -31,7 +31,8 @@
 
         private void OpenSettings(object sender, RoutedEventArgs e)
         {
-
+            SettingsWindow settingsWindow = new();
+            settingsWindow.Show();
         }
     }
 }
