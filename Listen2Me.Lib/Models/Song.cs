@@ -1,6 +1,7 @@
 ﻿namespace Listen2Me.Lib.Models
 {
     using System;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Song
     {
@@ -10,7 +11,7 @@
         public string Genre { get; set; }
         public string BPM { get; set; }
         public string Bitrate { get; set; }
-
+        [NotMapped]
         public string Display
         {
             get
