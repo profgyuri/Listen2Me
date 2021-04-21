@@ -4,6 +4,7 @@
 
     using Listen2Me.Lib.Models;
     using Listen2Me.Lib.Utilities;
+
     using LowLevelKeyboardHook;
 
     using System;
@@ -38,6 +39,8 @@
         private KeyboardHook keyboardHook;
 
         private int playingIndex;
+
+        private static readonly Timer timer = new();
         #endregion
 
         #region Public Properties
@@ -92,6 +95,7 @@
         {
             CommandInit();
             DependencyInit();
+            TimerInit();
 
             //The sole puprose of the 5 lines below is to help me make the UI.
             LoadedSong = SongAnalyzer.Analyze(@"e:\Zene\Hardstyle\Brennan Heart & Toneshifterz - Define Yourself.mp3");
@@ -100,17 +104,6 @@
 
             PlayList.Add(LoadedSong);
             PlayList.Add(LoadedSong);
-
-            Timer timer = new();
-            timer.AutoReset = true;
-            timer.Enabled = true;
-            timer.Interval = 100;
-            timer.Elapsed += Timer_Elapsed;
-        }
-
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            OnPropertyChanged(nameof(ElapsedSeconds));
         }
 
         #region Initializers
@@ -132,6 +125,14 @@
             StopCommand = new RelayCommand(() => musicPlayer.Stop());
             SkipToNextCommand = new RelayCommand(() => SkipSong(true));
             SkipToPreviousCommand = new RelayCommand(() => SkipSong(false));
+        }
+
+        private void TimerInit()
+        {
+            timer.Enabled = true;
+            timer.Interval = 100;
+            timer.Elapsed += (sender, e) => OnPropertyChanged(nameof(ElapsedSeconds));
+            timer.Start();
         }
         #endregion
 
