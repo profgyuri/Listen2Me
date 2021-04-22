@@ -18,7 +18,7 @@
         Title="Settings" Height="350" Width="400">
 
     <Window.DataContext>
-        <library:ViewModel/>
+        <library:SettingsViewModel/>
     </Window.DataContext>
 
     <WindowChrome.WindowChrome>
@@ -187,10 +187,13 @@
                     HorizontalContentAlignment="Left"
                     MinHeight="25"/>
                 <Button
+                    x:Name="AddFolderButton"
                     Style="{StaticResource FolderButton}"
                     Grid.Row="1"
+                    Click="AddFolderButton_Click"
                     Content="Add Folder"/>
                 <Button
+                    x:Name="RemoveFolderButton"
                     Style="{StaticResource FolderButton}"
                     Grid.Row="1"
                     Grid.Column="1"

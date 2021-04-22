@@ -10,27 +10,13 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
     using System.Timers;
     using System.Windows.Input;
 
     using IContainer = Autofac.IContainer;
 
-    public class ViewModel : INotifyPropertyChanged
+    public class MainViewModel : ViewModelBase
     {
-        #region Interface Implementation
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            if (propertyName != null)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        #endregion
-
         #region Private Fields
         private IContainer container;
 
@@ -91,7 +77,7 @@
         public ICommand ShuffleCommand { get; set; }
         #endregion
 
-        public ViewModel()
+        public MainViewModel()
         {
             CommandInit();
             DependencyInit();

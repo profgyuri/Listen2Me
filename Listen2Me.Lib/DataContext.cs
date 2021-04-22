@@ -4,8 +4,9 @@
 
     using System.Data.Entity;
 
-    class DataContext : DbContext
+    public class DataContext : DbContext
     {
         public DbSet<Song> Songs { get; set; }
+        public DbSet<MusicFolder> MusicFolders { get; set; }
     }
 }
