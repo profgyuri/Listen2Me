@@ -180,12 +180,25 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <ListView
+                    ItemsSource="{Binding MusicFolders}"
+                    SelectedItem="{Binding SelectedMusicFolder}"
                     Grid.ColumnSpan="2"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Left"
-                    MinHeight="25"/>
+                    Margin="0 0 0 10"
+                    MinHeight="25">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Text="{Binding Path}"
+                                FontSize="12"
+                                TextTrimming="CharacterEllipsis"
+                                FontWeight="SemiBold"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
                 <Button
                     x:Name="AddFolderButton"
                     Style="{StaticResource FolderButton}"
@@ -194,6 +207,7 @@
                     Content="Add Folder"/>
                 <Button
                     x:Name="RemoveFolderButton"
+                    Command="{Binding RemoveFolderCommand}"
                     Style="{StaticResource FolderButton}"
                     Grid.Row="1"
                     Grid.Column="1"

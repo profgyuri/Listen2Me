@@ -1,25 +1,41 @@
 ﻿namespace Listen2Me.Lib
 {
     using Listen2Me.Lib.Models;
+    using Listen2Me.Lib.Utilities;
 
     using System.Collections.ObjectModel;
     using System.Windows.Input;
 
     public class SettingsViewModel : ViewModelBase
     {
-        #region Private Fields
-
-        #endregion
-
         #region Public Properties
         public ObservableCollection<MusicFolder> MusicFolders { get; set; }
+        public MusicFolder SelectedMusicFolder { get; set; }
         #endregion
 
         #region Commands
-        
+        public ICommand RemoveFolderCommand { get; set; }
         #endregion
 
         public SettingsViewModel()
+        {
+            DependencyInit();
+            DatabaseInit();
+            CommandInit();
+        }
+
+        #region Initializers
+        private void DependencyInit()
+        {
+            MusicFolders = new ObservableCollection<MusicFolder>();
+        }
+
+        private void CommandInit()
+        {
+            RemoveFolderCommand = new RelayCommand(() => RemoveMusicFolder());
+        }
+
+        private void DatabaseInit()
         {
             using DataContext dataContext = new();
 
@@ -28,11 +44,25 @@
                 MusicFolders.Add(folder);
             }
         }
+        #endregion
 
-        #region Initializers
-        private void CommandInit()
+        #region Helper Methods
+        public void AddMusicFolder(string path)
         {
-            
+            MusicFolder newFolder = new() { Path = path };
+
+            MusicFolderHelper.AddMusicFolderToDatabase(newFolder);
+            MusicFolders.Add(newFolder);
+        }
+
+        private void RemoveMusicFolder()
+        {
+            if (SelectedMusicFolder is { })
+            {
+                MusicFolders.Remove(SelectedMusicFolder);
+
+                MusicFolderHelper.RemoveFolderFromDatabase(SelectedMusicFolder);
+            }
         }
         #endregion
     }
