@@ -3,32 +3,42 @@
     using Listen2Me.Lib.Models;
 
     using System;
+    using System.Linq;
 
     public static class MusicFolderHelper
     {
-        public static void AddMusicFolderToDatabase(MusicFolder newFolder)
+        public static MusicFolder AddMusicFolderToDatabase(string path)
         {
             using DataContext dataContext = new();
-            dataContext.MusicFolders.Add(newFolder);
+            MusicFolder result = dataContext.MusicFolders.Add(new MusicFolder(){ Path = path });
             dataContext.SaveChanges();
+
+            return result;
         }
 
-        public static void RemoveFolderFromDatabase(MusicFolder folder)
+        public static bool RemoveFolderFromDatabase(MusicFolder folder)
         {
+            bool result = false;
+
             using DataContext dataContext = new();
+
+            MusicFolder toDelete = dataContext.MusicFolders.Find(folder.MusicFolderId);
 
             try
             {
-                dataContext.MusicFolders.Remove(folder);
+                dataContext.MusicFolders.Remove(toDelete);
+                result = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("The specified folder could not be removed from the database! (Maybe it wasn't even there?)");
+                throw new InvalidOperationException("The specified folder could not be removed from the database! (Maybe it wasn't even there?) " + ex.Message);
             }
             finally
             {
                 dataContext.SaveChanges();
             }
+
+            return result;
         }
     }
 }

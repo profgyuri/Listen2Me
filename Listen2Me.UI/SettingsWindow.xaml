@@ -184,6 +184,7 @@
                 <ListView
                     ItemsSource="{Binding MusicFolders}"
                     SelectedItem="{Binding SelectedMusicFolder}"
+                    SelectionMode="Single"
                     Grid.ColumnSpan="2"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Left"

@@ -49,19 +49,18 @@
         #region Helper Methods
         public void AddMusicFolder(string path)
         {
-            MusicFolder newFolder = new() { Path = path };
-
-            MusicFolderHelper.AddMusicFolderToDatabase(newFolder);
+            MusicFolder newFolder = MusicFolderHelper.AddMusicFolderToDatabase(path);
             MusicFolders.Add(newFolder);
         }
 
         private void RemoveMusicFolder()
         {
-            if (SelectedMusicFolder is { })
+            if (SelectedMusicFolder is not null)
             {
-                MusicFolders.Remove(SelectedMusicFolder);
-
-                MusicFolderHelper.RemoveFolderFromDatabase(SelectedMusicFolder);
+                if (MusicFolderHelper.RemoveFolderFromDatabase(SelectedMusicFolder))
+                {
+                    MusicFolders.Remove(SelectedMusicFolder);
+                }
             }
         }
         #endregion
