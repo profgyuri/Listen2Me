@@ -11,7 +11,7 @@
         Height="1">
         <Rectangle.Fill>
             <RadialGradientBrush RadiusY="0.65">
-                <GradientStop Color="{StaticResource PrimaryOrange}" Offset="0.5"/>
+                <GradientStop Color="{StaticResource PrimaryOrangeDark}" Offset="0.5"/>
                 <GradientStop Color="{StaticResource BackgroundColor}" Offset="1"/>
             </RadialGradientBrush>
         </Rectangle.Fill>

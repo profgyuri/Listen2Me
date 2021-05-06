@@ -40,6 +40,15 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{StaticResource GradientForeground}"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="materialDesign:RippleAssist.IsDisabled" Value="True"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderThickness" Value="1"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{StaticResource ButtonPressedBrush}"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
         <Style TargetType="Button"
             x:Key="TitleBarButton"
@@ -51,13 +60,13 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{StaticResource GradientForeground}"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="materialDesign:RippleAssist.IsDisabled" Value="True"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF7A3200"/>
+                    <Setter Property="Background" Value="{StaticResource ButtonMouseOverBrush}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#FF562B00"/>
-                    <Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth2"/>
+                    <Setter Property="Background" Value="{StaticResource ButtonPressedBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>

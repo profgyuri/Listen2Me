@@ -10,18 +10,22 @@
                 <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="DeepOrange" SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Color x:Key="PrimaryOrange">#FFCF7B02</Color>
-            <Color x:Key="PrimaryOrangeDark">#FFB46B00</Color>
-            <Color x:Key="BackgroundColor">#FF222129</Color>
+            <Color x:Key="PrimaryOrange">#FF6600</Color>
+            <Color x:Key="PrimaryOrangeDark">#C13B00</Color>
+            <Color x:Key="BackgroundColor">#1B1D1E</Color>
+            <Color x:Key="ButtonMouseOverColor">#2B2B2B</Color>
+            <Color x:Key="ButtonPressedColor">#353535</Color>
             <SolidColorBrush x:Key="BackgroundColorBrush" Color="{StaticResource BackgroundColor}"/>
             <SolidColorBrush x:Key="ForegroundColorBrush" Color="{StaticResource PrimaryOrangeDark}"/>
-            <SolidColorBrush x:Key="BorderBrush" Color="#FFB46B00"/>
+            <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource PrimaryOrangeDark}"/>
             <LinearGradientBrush x:Key="GradientForeground" EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="{StaticResource PrimaryOrange}" Offset="0"/>
                 <GradientStop Color="{StaticResource PrimaryOrangeDark}" Offset="1"/>
             </LinearGradientBrush>
             <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource PrimaryOrange}"/>
             <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource PrimaryOrangeDark}"/>
+            <SolidColorBrush x:Key="ButtonMouseOverBrush" Color="{StaticResource ButtonMouseOverColor}"/>
+            <SolidColorBrush x:Key="ButtonPressedBrush" Color="{StaticResource ButtonPressedColor}"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
