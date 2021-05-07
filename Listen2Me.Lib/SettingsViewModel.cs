@@ -4,6 +4,9 @@
     using Listen2Me.Lib.Utilities;
 
     using System.Collections.ObjectModel;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows.Input;
 
     public class SettingsViewModel : ViewModelBase
@@ -20,7 +23,7 @@
         public SettingsViewModel()
         {
             DependencyInit();
-            DatabaseInit();
+            DatabaseInitAsync().ConfigureAwait(false);
             CommandInit();
         }
 
@@ -35,14 +38,11 @@
             RemoveFolderCommand = new RelayCommand(() => RemoveMusicFolder());
         }
 
-        private void DatabaseInit()
+        private async Task DatabaseInitAsync()
         {
             using DataContext dataContext = new();
 
-            foreach (MusicFolder folder in dataContext.MusicFolders)
-            {
-                MusicFolders.Add(folder);
-            }
+            MusicFolders = new ObservableCollection<MusicFolder>(await Task.Run(() => dataContext.MusicFolders));
         }
         #endregion
 
