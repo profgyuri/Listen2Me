@@ -4,8 +4,6 @@
     using Listen2Me.Lib.Utilities;
 
     using System.Collections.ObjectModel;
-    using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Windows.Input;
 
@@ -14,10 +12,12 @@
         #region Public Properties
         public ObservableCollection<MusicFolder> MusicFolders { get; set; }
         public MusicFolder SelectedMusicFolder { get; set; }
+        public bool ScanOnStartupIsChecked { get; set; }
         #endregion
 
         #region Commands
         public ICommand RemoveFolderCommand { get; set; }
+        public ICommand ScanNowCommand { get; set; }
         #endregion
 
         public SettingsViewModel()
@@ -36,13 +36,14 @@
         private void CommandInit()
         {
             RemoveFolderCommand = new RelayCommand(() => RemoveMusicFolder());
+            ScanNowCommand = new RelayCommand(() => throw new System.NotImplementedException());
         }
 
         private async Task DatabaseInitAsync()
         {
             using DataContext dataContext = new();
 
-            MusicFolders = new ObservableCollection<MusicFolder>(await Task.Run(() => dataContext.MusicFolders));
+            MusicFolders = new ObservableCollection<MusicFolder>(await Task.Run(() => dataContext.MusicFolders).ConfigureAwait(false));
         }
         #endregion
 
