@@ -47,9 +47,9 @@
             }
         }
 
-        public static Task<Song> AnalyzeAsync(string path)
+        public static async Task<Song> AnalyzeAsync(string path)
         {
-            return Task.Run(() => Analyze(path));
+            return await Task.Run(() => Analyze(path)).ConfigureAwait(false);
         }
 
         public static IEnumerable<Song> Analyze(string[] paths)
@@ -62,9 +62,9 @@
 
         public static async IAsyncEnumerable<Song> AnalyzeAsync(string[] paths)
         {
-            for (int i = 0; i < paths.Length; i++)
+            foreach (string path in paths)
             {
-                yield return await Task.Run(() => Analyze(paths[i])).ConfigureAwait(false);
+                yield return await Task.Run(() => Analyze(path)).ConfigureAwait(false);
             }
         }
     }
