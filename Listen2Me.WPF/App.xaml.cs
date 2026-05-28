@@ -12,6 +12,7 @@ using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Threading;
 using Listen2Me.MVVM.ViewModels;
 using Listen2Me.WPF.Threading;
+using Listen2Me.WPF.Views.Shells;
 
 namespace Listen2Me.WPF;
 
@@ -48,7 +49,7 @@ public partial class App : Application
 
             RegisterNavigation(_host.Services);
 
-            var window = _host.Services.GetRequiredService<MainWindow>();
+            var window = _host.Services.GetRequiredService<MainShell>();
             window.Show();
 
             var navigationService = _host.Services.GetRequiredService<INavigationService>();
@@ -102,12 +103,12 @@ public partial class App : Application
                 services.AddSingleton<INavigationRegistry, NavigationRegistry>();
                 services.AddSingleton<NavigationState>();
                 services.AddSingleton<IInitializationTracker, InitializationTracker>();
-                services.AddSingleton<INavigationService, NavigationService>();
+                services.AddScoped<INavigationService, NavigationService>();
                 services.AddSingleton<IErrorHandler, LoggingErrorHandler>();
                 services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
                 services.AddSingleton<Serilog.ILogger>(_ => Log.Logger);
-                services.AddSingleton<ShellViewModel>();
-                services.AddSingleton<MainWindow>();
+                services.AddSingleton<ShellViewModelBase>();
+                services.AddSingleton<MainShell>();
                 services.AddSingleton<IUiDispatcher>(_ => new WpfUiDispatcher(Application.Current.Dispatcher));
 
                 var discoveredModules =

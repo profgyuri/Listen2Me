@@ -12,7 +12,7 @@ namespace Listen2Me.MVVM.ViewModels;
 public abstract class ViewModelBase : ObservableObject, IInitializeAsync, IDisposable
 {
     private readonly IErrorHandler _errorHandler;
-    private readonly ILogger _logger;
+    protected readonly ILogger Logger;
     private readonly SemaphoreSlim _initializeSync = new(1, 1);
     private int _hasMessageRegistrations;
     private int _isInitialized;
@@ -31,7 +31,7 @@ public abstract class ViewModelBase : ObservableObject, IInitializeAsync, IDispo
         ArgumentNullException.ThrowIfNull(messenger);
 
         _errorHandler = errorHandler;
-        _logger = logger.ForContext(GetType());
+        Logger = logger.ForContext(GetType());
         Messenger = messenger;
     }
 
@@ -143,7 +143,7 @@ public abstract class ViewModelBase : ObservableObject, IInitializeAsync, IDispo
         }
         catch (Exception exception)
         {
-            _logger.Error(exception, "ViewModel operation failed in {Context}.", context);
+            Logger.Error(exception, "ViewModel operation failed in {Context}.", context);
             await _errorHandler.HandleAsync(exception, context, cancellationToken).ConfigureAwait(false);
         }
     }
