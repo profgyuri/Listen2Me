@@ -29,4 +29,10 @@ public sealed class MainShellModule : IModule
     {
         registry.Register<MainLayoutViewModel>("home");
     }
+
+    /// <inheritdoc />
+    public void RegisterShells(IShellRegistry registry)
+    {
+        registry.Register<MainShellViewModel, MainShell>();
+    }
 }

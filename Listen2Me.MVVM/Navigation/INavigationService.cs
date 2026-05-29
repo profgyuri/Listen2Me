@@ -1,3 +1,5 @@
+using Listen2Me.MVVM.ViewModels;
+
 namespace Listen2Me.MVVM.Navigation;
 
 /// <summary>
@@ -6,13 +8,13 @@ namespace Listen2Me.MVVM.Navigation;
 public interface INavigationService
 {
     /// <summary>
-    /// Navigates to a route.
+    /// Navigates to a route within the shell.
     /// </summary>
     /// <param name="route">The route key.</param>
     /// <param name="parameter">An optional navigation parameter.</param>
     /// <param name="cancellationToken">A token that can cancel navigation.</param>
     /// <returns>A task representing the asynchronous navigation operation.</returns>
-    Task NavigateAsync(string route, object? parameter = null, CancellationToken cancellationToken = default);
+    Task NavigateToRouteAsync(string route, object? parameter = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets a value that indicates whether a route is registered.

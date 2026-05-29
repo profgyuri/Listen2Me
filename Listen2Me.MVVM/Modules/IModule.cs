@@ -24,4 +24,10 @@ public interface IModule
     /// </summary>
     /// <param name="registry">The navigation registry.</param>
     void RegisterNavigation(INavigationRegistry registry);
+    
+    /// <summary>
+    /// Registers module shells.
+    /// </summary>
+    /// <param name="registry"></param>
+    void RegisterShells(IShellRegistry registry);
 }

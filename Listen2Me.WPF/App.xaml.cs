@@ -1,4 +1,6 @@
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +13,8 @@ using Listen2Me.MVVM.Modules;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Threading;
 using Listen2Me.MVVM.ViewModels;
+using Listen2Me.MVVM.ViewModels.Shells;
+using Listen2Me.WPF.Navigation;
 using Listen2Me.WPF.Threading;
 using Listen2Me.WPF.Views.Shells;
 
@@ -37,6 +41,9 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        
+        RenderOptions.ProcessRenderMode = RenderMode.Default;
+        ShutdownMode = ShutdownMode.OnMainWindowClose;
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
@@ -49,12 +56,12 @@ public partial class App : Application
 
             RegisterNavigation(_host.Services);
 
-            var window = _host.Services.GetRequiredService<MainShell>();
-            window.Show();
+            var shellManager = _host.Services.GetRequiredService<IShellManager>();
+            await shellManager.OpenShell<MainShellViewModel>(CancellationToken.None);
 
             var navigationService = _host.Services.GetRequiredService<INavigationService>();
             var navigationOptions = _host.Services.GetRequiredService<IOptions<NavigationOptions>>().Value;
-            await navigationService.NavigateAsync(navigationOptions.DefaultRoute).ConfigureAwait(true);
+            await navigationService.NavigateToRouteAsync(navigationOptions.DefaultRoute).ConfigureAwait(true);
         }
         catch (Exception exception)
         {
@@ -104,6 +111,8 @@ public partial class App : Application
                 services.AddSingleton<NavigationState>();
                 services.AddSingleton<IInitializationTracker, InitializationTracker>();
                 services.AddScoped<INavigationService, NavigationService>();
+                services.AddSingleton<IShellManager, ShellManager>();
+                services.AddSingleton<IShellRegistry, ShellRegistry>();
                 services.AddSingleton<IErrorHandler, LoggingErrorHandler>();
                 services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
                 services.AddSingleton<Serilog.ILogger>(_ => Log.Logger);
@@ -127,10 +136,12 @@ public partial class App : Application
     {
         var moduleCatalog = services.GetRequiredService<IModuleCatalog>();
         var navigationRegistry = services.GetRequiredService<INavigationRegistry>();
+        var shellRegistry = services.GetRequiredService<IShellRegistry>();
 
         foreach (var module in moduleCatalog.LoadModules())
         {
             module.RegisterNavigation(navigationRegistry);
+            module.RegisterShells(shellRegistry);
         }
     }
 

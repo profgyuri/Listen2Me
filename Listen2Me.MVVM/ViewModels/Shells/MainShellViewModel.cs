@@ -15,7 +15,7 @@ public class MainShellViewModel : ShellViewModelBase
 
     public override async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        await NavigationService.NavigateAsync("home", cancellationToken: cancellationToken);
+        await NavigationService.NavigateToRouteAsync("home", cancellationToken: cancellationToken);
         Logger.Information("MainShellViewModel initialized.");
     }
 }

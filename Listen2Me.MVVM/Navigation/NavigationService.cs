@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Initialization;
+using Listen2Me.MVVM.ViewModels;
 
 namespace Listen2Me.MVVM.Navigation;
 
@@ -39,8 +40,7 @@ public sealed class NavigationService : INavigationService
     /// <inheritdoc />
     public bool CanNavigate(string route) => _registry.TryResolve(route, out _);
 
-    /// <inheritdoc />
-    public async Task NavigateAsync(string route, object? parameter = null,
+    public async Task NavigateToRouteAsync(string route, object? parameter = null,
         CancellationToken cancellationToken = default)
     {
         if (!_registry.TryResolve(route, out var target) || target is null)
