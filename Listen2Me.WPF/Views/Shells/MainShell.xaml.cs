@@ -8,8 +8,6 @@ public partial class MainShell : Window
     public MainShell(MainShellViewModel vm)
     {
         InitializeComponent();
-        vm.EnsureInitializedAsync().Wait();
         DataContext = vm;
-        
     }
 }

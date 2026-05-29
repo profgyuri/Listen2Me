@@ -12,18 +12,16 @@ using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Modules;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Threading;
-using Listen2Me.MVVM.ViewModels;
 using Listen2Me.MVVM.ViewModels.Shells;
 using Listen2Me.WPF.Navigation;
 using Listen2Me.WPF.Threading;
-using Listen2Me.WPF.Views.Shells;
 
 namespace Listen2Me.WPF;
 
 /// <summary>
 /// Defines WPF application startup and composition root behavior.
 /// </summary>
-public partial class App : Application
+public partial class App
 {
     private IHost? _host;
 
@@ -85,7 +83,7 @@ public partial class App : Application
             }
         }
 
-        Log.CloseAndFlush();
+        await Log.CloseAndFlushAsync();
         base.OnExit(e);
     }
 
@@ -115,9 +113,7 @@ public partial class App : Application
                 services.AddSingleton<IShellRegistry, ShellRegistry>();
                 services.AddSingleton<IErrorHandler, LoggingErrorHandler>();
                 services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
-                services.AddSingleton<Serilog.ILogger>(_ => Log.Logger);
-                services.AddSingleton<ShellViewModelBase>();
-                services.AddSingleton<MainShell>();
+                services.AddSingleton<ILogger>(_ => Log.Logger);
                 services.AddSingleton<IUiDispatcher>(_ => new WpfUiDispatcher(Application.Current.Dispatcher));
 
                 var discoveredModules =

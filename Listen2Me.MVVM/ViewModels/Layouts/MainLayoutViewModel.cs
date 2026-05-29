@@ -7,6 +7,8 @@ namespace Listen2Me.MVVM.ViewModels.Layouts;
 
 public sealed partial class MainLayoutViewModel : ViewModelBase
 {
+    [ObservableProperty] private string _testText = "Test";
+    
     public MainLayoutViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger) 
         : base(errorHandler, logger, messenger)
     {

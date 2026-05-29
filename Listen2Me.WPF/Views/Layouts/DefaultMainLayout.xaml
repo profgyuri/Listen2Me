@@ -8,6 +8,6 @@
              d:DataContext="{d:DesignInstance layouts:MainLayoutViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBlock Text="MainLayout"/>
+        <TextBlock Text="{Binding TestText}"/>
     </Grid>
 </UserControl>
