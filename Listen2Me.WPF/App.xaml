@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:layouts="clr-namespace:Listen2Me.WPF.Views.Layouts"
-             xmlns:layoutVm="clr-namespace:Listen2Me.MVVM.ViewModels.Layouts;assembly=Listen2Me.MVVM">
+             xmlns:layoutVm="clr-namespace:Listen2Me.MVVM.ViewModels.Layouts;assembly=Listen2Me.MVVM"
+             xmlns:widgetVm="clr-namespace:Listen2Me.MVVM.ViewModels.Widgets;assembly=Listen2Me.MVVM"
+             xmlns:widgets="clr-namespace:Listen2Me.WPF.Views.Widgets">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,6 +14,18 @@
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate DataType="{x:Type layoutVm:MainLayoutViewModel}">
                 <layouts:DefaultMainLayout />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type widgetVm:PlayerControlsWidgetViewModel}">
+                <widgets:PlayerControlsWidget/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type widgetVm:PlaylistWidgetViewModel}">
+                <widgets:PlaylistWidget/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type widgetVm:SearchResultsWidgetViewModel}">
+                <widgets:SearchResultsWidget/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type widgetVm:TrackInfoWidgetViewModel}">
+                <widgets:TrackInfoWidget/>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

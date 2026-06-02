@@ -4,10 +4,74 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:layouts="clr-namespace:Listen2Me.MVVM.ViewModels.Layouts;assembly=Listen2Me.MVVM"
+             xmlns:dd="urn:gong-wpf-dragdrop"
+             xmlns:vm="clr-namespace:Listen2Me.MVVM.ViewModels;assembly=Listen2Me.MVVM"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance layouts:MainLayoutViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TextBlock Text="{Binding TestText}"/>
-    </Grid>
+    
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type vm:WidgetViewModel}">
+            <Border Background="DimGray" CornerRadius="6" Margin="4">
+                <TextBlock Text="{Binding Name}"/>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    
+    <DockPanel>
+        <!-- Edit mode toolbar -->
+        <ToolBar DockPanel.Dock="Top">
+            <ToggleButton IsChecked="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                          Content="Edit Layout"/>
+        </ToolBar>
+
+        <!-- 2×2 grid -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="6*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- The four cells, each bound to one item by index -->
+            <ContentControl Grid.Row="0" Grid.Column="0"
+                            Content="{Binding Widgets[0]}"
+                            dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.UseDefaultDragAdorner="True"/>
+
+            <ContentControl Grid.Row="0" Grid.Column="2"
+                            Content="{Binding Widgets[1]}"
+                            dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.UseDefaultDragAdorner="True"/>
+
+            <ContentControl Grid.Row="2" Grid.Column="0"
+                            Content="{Binding Widgets[2]}"
+                            dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.UseDefaultDragAdorner="True"/>
+
+            <ContentControl Grid.Row="2" Grid.Column="2"
+                            Content="{Binding Widgets[3]}"
+                            dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            dd:DragDrop.UseDefaultDragAdorner="True"/>
+
+            <!-- Splitters (always active, unrelated to edit mode) -->
+            <GridSplitter Grid.Row="1" Grid.ColumnSpan="3"
+                          HorizontalAlignment="Stretch" Height="4" Background="Gray"/>
+            <GridSplitter Grid.Column="1" Grid.RowSpan="3"
+                          HorizontalAlignment="Center" Width="4" Background="Gray"/>
+        </Grid>
+    </DockPanel>
 </UserControl>
