@@ -32,46 +32,59 @@
                 <RowDefinition Height="4"/>
                 <RowDefinition Height="6*"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
 
-            <!-- The four cells, each bound to one item by index -->
-            <ContentControl Grid.Row="0" Grid.Column="0"
-                            Content="{Binding Widgets[0]}"
-                            dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.UseDefaultDragAdorner="True"/>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="4"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!-- The four cells, each bound to one item by index -->
+                <ContentControl Grid.Row="0" Grid.Column="0"
+                                Content="{Binding Widgets[0]}"
+                                dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.UseDefaultDragAdorner="True"/>
 
-            <ContentControl Grid.Row="0" Grid.Column="2"
-                            Content="{Binding Widgets[1]}"
-                            dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.UseDefaultDragAdorner="True"/>
+                <ContentControl Grid.Row="0" Grid.Column="2"
+                                Content="{Binding Widgets[1]}"
+                                dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.UseDefaultDragAdorner="True"/>
+                
+                <GridSplitter Grid.Row="0" Grid.Column="1"
+                              HorizontalAlignment="Center" Width="4" Background="Gray"/>
+            </Grid>
 
-            <ContentControl Grid.Row="2" Grid.Column="0"
-                            Content="{Binding Widgets[2]}"
-                            dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.UseDefaultDragAdorner="True"/>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="4"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <ContentControl Grid.Row="0" Grid.Column="0"
+                                Content="{Binding Widgets[2]}"
+                                dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.UseDefaultDragAdorner="True"/>
 
-            <ContentControl Grid.Row="2" Grid.Column="2"
-                            Content="{Binding Widgets[3]}"
-                            dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            dd:DragDrop.UseDefaultDragAdorner="True"/>
+                <ContentControl Grid.Row="0" Grid.Column="2"
+                                Content="{Binding Widgets[3]}"
+                                dd:DragDrop.IsDragSource="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.IsDropTarget="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.DropHandler="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                dd:DragDrop.UseDefaultDragAdorner="True"/>
+                
+                <GridSplitter Grid.Row="0" Grid.Column="1"
+                              HorizontalAlignment="Center" Width="4" Background="Gray"/>
+            </Grid>
 
-            <!-- Splitters (always active, unrelated to edit mode) -->
-            <GridSplitter Grid.Row="1" Grid.ColumnSpan="3"
+            <GridSplitter Grid.Row="1" Grid.Column="0"
                           HorizontalAlignment="Stretch" Height="4" Background="Gray"/>
-            <GridSplitter Grid.Column="1" Grid.RowSpan="3"
-                          HorizontalAlignment="Center" Width="4" Background="Gray"/>
         </Grid>
     </DockPanel>
 </UserControl>

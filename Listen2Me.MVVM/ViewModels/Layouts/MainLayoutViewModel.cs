@@ -30,6 +30,7 @@ public sealed partial class MainLayoutViewModel : ViewModelBase, IDropTarget
         Widgets = new(orderedWidgets);
     }
 
+    #region GongSolutions.Wpf.DragDrop.IDropTarget
     public void DragOver(IDropInfo dropInfo)
     {
         if (dropInfo.Data is WidgetViewModel)
@@ -45,6 +46,17 @@ public sealed partial class MainLayoutViewModel : ViewModelBase, IDropTarget
 
         // VisualTarget is the ContentControl being dropped onto
         if (dropInfo.VisualTarget is not ContentControl { Content: WidgetViewModel target }) return;
+        if (source == target) return;
+        
+        // Reorder only in the same row or switch rows
+        if (source.Order < 2 && target.Order >= 2 ||
+            target.Order < 2 && source.Order >= 2)
+        {
+            (Widgets[0], Widgets[2]) = (Widgets[2], Widgets[0]);
+            (Widgets[1], Widgets[3]) = (Widgets[3], Widgets[1]);
+            
+            return;
+        }
 
         var sourceIndex = Widgets.IndexOf(source);
         var targetIndex = Widgets.IndexOf(target);
@@ -54,4 +66,5 @@ public sealed partial class MainLayoutViewModel : ViewModelBase, IDropTarget
         Widgets[sourceIndex] = target;
         Widgets[targetIndex] = source;
     }
+    #endregion
 }
