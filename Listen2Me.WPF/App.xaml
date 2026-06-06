@@ -5,16 +5,24 @@
              xmlns:layouts="clr-namespace:Listen2Me.WPF.Views.Layouts"
              xmlns:layoutVm="clr-namespace:Listen2Me.MVVM.ViewModels.Layouts;assembly=Listen2Me.MVVM"
              xmlns:widgetVm="clr-namespace:Listen2Me.MVVM.ViewModels.Widgets;assembly=Listen2Me.MVVM"
-             xmlns:widgets="clr-namespace:Listen2Me.WPF.Views.Widgets">
+             xmlns:widgets="clr-namespace:Listen2Me.WPF.Views.Widgets"
+             xmlns:componentVm="clr-namespace:Listen2Me.MVVM.ViewModels.Components;assembly=Listen2Me.MVVM"
+             xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:CustomColorTheme BaseTheme="Light" PrimaryColor="DarkSlateBlue" SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
+                <ResourceDictionary Source="Styles/NavBarStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
             <DataTemplate DataType="{x:Type layoutVm:MainLayoutViewModel}">
                 <layouts:DefaultMainLayout />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type layoutVm:SettingsLayoutViewModel}">
+                <layouts:SettingsLayout/>
+            </DataTemplate>
+            
             <DataTemplate DataType="{x:Type widgetVm:PlayerControlsWidgetViewModel}">
                 <widgets:PlayerControlsWidget/>
             </DataTemplate>
@@ -27,6 +35,11 @@
             <DataTemplate DataType="{x:Type widgetVm:TrackInfoWidgetViewModel}">
                 <widgets:TrackInfoWidget/>
             </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type componentVm:NavBarViewModel}">
+                <components:NavBar/>
+            </DataTemplate>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

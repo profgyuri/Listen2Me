@@ -39,7 +39,7 @@ public partial class ShellViewModelBase : ViewModelBase
     }
 
     [RelayCommand]
-    private Task NavigateAsync(string route) =>
+    protected Task NavigateAsync(string route) =>
         ExecuteSafeAsync(
             ct => NavigationService.NavigateToRouteAsync(route, cancellationToken: ct),
             $"Navigate({route})");

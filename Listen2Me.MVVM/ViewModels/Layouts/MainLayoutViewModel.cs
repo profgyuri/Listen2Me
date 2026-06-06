@@ -31,6 +31,7 @@ public sealed partial class MainLayoutViewModel : ViewModelBase, IDropTarget
     }
 
     #region GongSolutions.Wpf.DragDrop.IDropTarget
+    /// <inheritdoc />
     public void DragOver(IDropInfo dropInfo)
     {
         if (dropInfo.Data is WidgetViewModel)
@@ -40,6 +41,7 @@ public sealed partial class MainLayoutViewModel : ViewModelBase, IDropTarget
         }
     }
 
+    /// <inheritdoc />
     public void Drop(IDropInfo dropInfo)
     {
         if (dropInfo.Data is not WidgetViewModel source) return;

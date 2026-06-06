@@ -22,12 +22,16 @@ public sealed class MainShellModule : IModule
         services.AddSingleton<MainShellViewModel>();
         services.AddSingleton<DefaultMainLayout>();
         services.AddSingleton<MainLayoutViewModel>();
+        
+        services.AddSingleton<SettingsLayout>();
+        services.AddSingleton<SettingsLayoutViewModel>();
     }
 
     /// <inheritdoc />
     public void RegisterNavigation(INavigationRegistry registry)
     {
         registry.Register<MainLayoutViewModel>("home");
+        registry.Register<SettingsLayoutViewModel>("settings");
     }
 
     /// <inheritdoc />
