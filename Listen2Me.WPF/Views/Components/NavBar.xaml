@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:Listen2Me.WPF.Views.Components"
              xmlns:componentVm="clr-namespace:Listen2Me.MVVM.ViewModels.Components;assembly=Listen2Me.MVVM"
              mc:Ignorable="d"
+             Background="{DynamicResource Brush.Background.Secondary}"
+             Foreground="{DynamicResource Brush.Foreground.Secondary}"
              d:DataContext="{d:DesignInstance componentVm:NavBarViewModel}"
              d:DesignHeight="300" d:DesignWidth="100">
     <StackPanel Orientation="Vertical">

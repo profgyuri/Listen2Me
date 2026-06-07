@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Messages;
 using Listen2Me.MVVM.Navigation;
+using Listen2Me.MVVM.Settings.Appearance.Themes;
 using Listen2Me.MVVM.ViewModels.Components;
 using Serilog;
 
@@ -10,18 +11,25 @@ namespace Listen2Me.MVVM.ViewModels.Shells;
 
 public partial class MainShellViewModel : ShellViewModelBase
 {
+    private readonly IThemeManager _themeManager;
+    
     [ObservableProperty] private NavBarViewModel _navBarViewModel;
     
     public MainShellViewModel(INavigationService navigationService, NavigationState navigationState, 
-        IErrorHandler errorHandler, ILogger logger, IMessenger messenger, NavBarViewModel navBarViewModel) 
+        IErrorHandler errorHandler, ILogger logger, IMessenger messenger, NavBarViewModel navBarViewModel, 
+        IThemeManager themeManager) 
         : base(navigationService, navigationState, errorHandler, logger, messenger)
     {
         _navBarViewModel = navBarViewModel;
+        _themeManager = themeManager;
     }
 
     /// <inheritdoc />
     public override async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
+        _themeManager.SetAccent(Accents.Blue);
+        _themeManager.SetTheme(Themes.Dark);
+        
         await NavigationService.NavigateToRouteAsync("home", cancellationToken: cancellationToken);
         
         RegisterMessage<NavBarNavigationMessage>(OnNavBarNavigationMessage);

@@ -14,9 +14,13 @@
                 Height="50">
             <StackPanel>
                 <materialDesign:PackIcon 
-                    Kind="{Binding Icon, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}" />
+                    Kind="{Binding Icon, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}"
+                    HorizontalAlignment="Center"
+                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type local:NavBar}}}"/>
                 <TextBlock 
-                    Text="{Binding Text, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}" />
+                    Text="{Binding Text, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}"
+                    HorizontalAlignment="Center"
+                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type local:NavBar}}}"/>
             </StackPanel>
         </Button>
     </Grid>

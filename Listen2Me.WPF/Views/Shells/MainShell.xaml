@@ -4,9 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:shells="clr-namespace:Listen2Me.MVVM.ViewModels.Shells;assembly=Listen2Me.MVVM"
-        xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance shells:MainShellViewModel}"
+        Background="{DynamicResource Brush.Background.Primary}"
+        Foreground="{DynamicResource Brush.Foreground.Primary}"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>

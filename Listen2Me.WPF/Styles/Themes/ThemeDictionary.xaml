@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Dark.xaml"/>
+        <ResourceDictionary Source="Light.xaml"/>
+        <ResourceDictionary Source="Accent.Blue.xaml"/>
+        <ResourceDictionary Source="Accent.Green.xaml"/>
+        <ResourceDictionary Source="Accent.Orange.xaml"/>
+        <ResourceDictionary Source="Accent.Purple.xaml"/>
+        <ResourceDictionary Source="Accent.Red.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
