@@ -6,22 +6,36 @@
              xmlns:local="clr-namespace:Listen2Me.WPF.Views.Components"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="100">
-    <Grid>
+             d:DesignHeight="50" d:DesignWidth="100">
+    
+    <UserControl.Resources>
+        <Style TargetType="local:NavBarItem">
+            <Style.Triggers>
+                <Trigger Property="IsActive" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Brush.Background.Secondary.Light}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Mid}"/>
+                    <Setter Property="Padding" Value="1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    
+    <Border>
         <Button Style="{DynamicResource NavBarItemButton}" 
                 Command="{Binding Command, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}"
                 CommandParameter="{Binding CommandParameter, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}"
-                Height="50">
+                Height="50" BorderThickness="0"
+                materialDesign:RippleAssist.IsDisabled="True">
             <StackPanel>
                 <materialDesign:PackIcon 
                     Kind="{Binding Icon, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}"
                     HorizontalAlignment="Center"
-                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type local:NavBar}}}"/>
+                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}"/>
                 <TextBlock 
                     Text="{Binding Text, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}"
                     HorizontalAlignment="Center"
-                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type local:NavBar}}}"/>
+                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}"/>
             </StackPanel>
         </Button>
-    </Grid>
+    </Border>
 </UserControl>

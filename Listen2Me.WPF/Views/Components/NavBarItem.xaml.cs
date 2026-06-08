@@ -28,6 +28,12 @@ public partial class NavBarItem : UserControl
         set => SetValue(CommandProperty, value);
     }
     
+    public bool IsActive
+    {
+        get => (bool)GetValue(IsActiveProperty);
+        set => SetValue(IsActiveProperty, value);
+    }
+    
     #region Icon Attached Property
     public static readonly DependencyProperty IconProperty =
         DependencyProperty.RegisterAttached(
@@ -102,5 +108,14 @@ public partial class NavBarItem : UserControl
         if (command?.CanExecute(null) == true)
             command.Execute(null);
     }
+    #endregion
+    
+    #region IsActive Attached Property
+    public static readonly DependencyProperty IsActiveProperty =
+        DependencyProperty.RegisterAttached(
+            "IsActive",
+            typeof(bool),
+            typeof(NavBarItem),
+            new PropertyMetadata(default(bool)));
     #endregion
 }
