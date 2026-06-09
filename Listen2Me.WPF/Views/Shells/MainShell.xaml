@@ -4,18 +4,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:shells="clr-namespace:Listen2Me.MVVM.ViewModels.Shells;assembly=Listen2Me.MVVM"
+        xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance shells:MainShellViewModel}"
         Background="{DynamicResource Brush.Background.Primary}"
         Foreground="{DynamicResource Brush.Foreground.Primary}"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        Title="MainWindow" Height="450" Width="800" BorderThickness="0"
+        WindowStyle="None">
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome x:Name="WindowChrome" CaptionHeight="32" />
+    </WindowChrome.WindowChrome>
+    
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding ElementName=WindowChrome, Path=CaptionHeight}"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         
-        <ContentControl Grid.Column="0" Content="{Binding NavBarViewModel}"/>
-        <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}"/>
+        <components:TitleBar Grid.Row="0"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+        
+            <ContentControl Grid.Column="0" Content="{Binding NavBarViewModel}"/>
+            <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}"/>
+        </Grid>
     </Grid>
 </Window>

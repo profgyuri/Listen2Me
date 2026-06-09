@@ -19,9 +19,9 @@ public partial class NavBarViewModel : ViewModelBase
     [RelayCommand]
     private void NavigateTo(string path)
     {
+        Logger.Information("Navigating to {Path}...", path);
         CurrentPath = path;
         Messenger.Send(new NavBarNavigationMessage(path));
-        Logger.Information("Navigating to {Path}...", path);
     }
 
     [RelayCommand]
