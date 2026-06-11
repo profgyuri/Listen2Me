@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Messages;
@@ -14,6 +16,7 @@ public partial class MainShellViewModel : ShellViewModelBase
     private readonly IThemeManager _themeManager;
     
     [ObservableProperty] private NavBarViewModel _navBarViewModel;
+    [ObservableProperty] private WindowState _windowState;
     
     public MainShellViewModel(INavigationService navigationService, NavigationState navigationState, 
         IErrorHandler errorHandler, ILogger logger, IMessenger messenger, NavBarViewModel navBarViewModel, 
@@ -42,4 +45,36 @@ public partial class MainShellViewModel : ShellViewModelBase
         NavigationService.NavigateToRouteAsync(path.Value);
         Logger.Information("Navigated to {Path}", path.Value);
     }
+
+    #region Window State Buttons
+    [RelayCommand]
+    private void Close()
+    {
+        Application.Current.Shutdown();
+    }
+    
+    [RelayCommand]
+    private void Minimize()
+    {
+        if (WindowState is not WindowState.Minimized)
+        {
+            WindowState = WindowState.Minimized;
+        }
+    }
+    
+    [RelayCommand]
+    private void Maximize()
+    {
+        if (WindowState is not WindowState.Maximized)
+        {
+            WindowState = WindowState.Maximized;
+            return;
+        }
+
+        if (WindowState is WindowState.Maximized)
+        {
+            WindowState = WindowState.Normal;
+        }
+    }
+    #endregion
 }

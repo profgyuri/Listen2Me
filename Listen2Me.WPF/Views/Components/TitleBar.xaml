@@ -53,9 +53,12 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center">
 
-                <Button Content="{materialDesign:PackIcon Kind=WindowMinimize,Size=15}"/>
-                <Button Content="{materialDesign:PackIcon Kind=WindowMaximize,Size=15}"/>
-                <Button Content="{materialDesign:PackIcon Kind=Close,Size=15}" />
+                <Button Content="{materialDesign:PackIcon Kind=WindowMinimize,Size=15}"
+                        Command="{Binding DataContext.MinimizeCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                <Button Content="{materialDesign:PackIcon Kind=WindowMaximize,Size=15}"
+                        Command="{Binding DataContext.MaximizeCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                <Button Content="{materialDesign:PackIcon Kind=Close,Size=15}" 
+                        Command="{Binding DataContext.CloseCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
             </StackPanel>
         </Grid>
     </Border>
