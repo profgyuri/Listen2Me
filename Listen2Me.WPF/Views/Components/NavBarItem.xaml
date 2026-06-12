@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Listen2Me.WPF.Views.Components"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="50" d:DesignWidth="100">
+             d:DesignHeight="75" d:DesignWidth="100">
     
     <UserControl.Resources>
         <Style TargetType="local:NavBarItem">
@@ -20,7 +20,7 @@
         </Style>
     </UserControl.Resources>
     
-    <Border>
+    <Border Height="75">
         <Button Style="{DynamicResource NavBarItemButton}" 
                 Command="{Binding Command, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}"
                 CommandParameter="{Binding CommandParameter, RelativeSource={RelativeSource AncestorType=local:NavBarItem}}"

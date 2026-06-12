@@ -6,7 +6,6 @@ using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Messages;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Settings.Appearance.Themes;
-using Listen2Me.MVVM.ViewModels.Components;
 using Serilog;
 
 namespace Listen2Me.MVVM.ViewModels.Shells;
@@ -15,15 +14,12 @@ public partial class MainShellViewModel : ShellViewModelBase
 {
     private readonly IThemeManager _themeManager;
     
-    [ObservableProperty] private NavBarViewModel _navBarViewModel;
     [ObservableProperty] private WindowState _windowState;
     
     public MainShellViewModel(INavigationService navigationService, NavigationState navigationState, 
-        IErrorHandler errorHandler, ILogger logger, IMessenger messenger, NavBarViewModel navBarViewModel, 
-        IThemeManager themeManager) 
+        IErrorHandler errorHandler, ILogger logger, IMessenger messenger, IThemeManager themeManager) 
         : base(navigationService, navigationState, errorHandler, logger, messenger)
     {
-        _navBarViewModel = navBarViewModel;
         _themeManager = themeManager;
     }
 

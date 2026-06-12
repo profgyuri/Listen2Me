@@ -4,11 +4,36 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:layouts="clr-namespace:Listen2Me.MVVM.ViewModels.Layouts;assembly=Listen2Me.MVVM"
-             xmlns:dd="urn:gong-wpf-dragdrop"
+             xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
              mc:Ignorable="d"
+             Foreground="{DynamicResource Brush.Foreground.Secondary}"
              d:DataContext="{d:DesignInstance layouts:SettingsLayoutViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="700">
     <Grid>
-        <TextBlock>Settings</TextBlock>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <components:NavBar Grid.Column="0">
+            <components:NavBarItem Text="General" Icon="Slider" 
+                                   Command="{Binding SwitchToCommand}" 
+                                   CommandParameter="{Binding GeneralTab}"
+                                   IsActive="{Binding GeneralTab.IsActive}"/>
+            <components:NavBarItem Text="Appearance" Icon="Paintbrush" 
+                                   Command="{Binding SwitchToCommand}" 
+                                   CommandParameter="{Binding AppearanceTab}"
+                                   IsActive="{Binding AppearanceTab.IsActive}"/>
+            <components:NavBarItem Text="Library" Icon="Library" 
+                                   Command="{Binding SwitchToCommand}" 
+                                   CommandParameter="{Binding LibraryTab}"
+                                   IsActive="{Binding LibraryTab.IsActive}"/>
+            <components:NavBarItem Text="Playback" Icon="Speaker" 
+                                   Command="{Binding SwitchToCommand}" 
+                                   CommandParameter="{Binding PlaybackTab}"
+                                   IsActive="{Binding PlaybackTab.IsActive}"/>
+        </components:NavBar>
+        
+        <ContentControl Grid.Column="1" Content="{Binding CurrentTab}"/>
     </Grid>
 </UserControl>

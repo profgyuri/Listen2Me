@@ -8,6 +8,6 @@
              d:DataContext="{d:DesignInstance settingsTabVm:LibraryTabViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid>
-        
+        <TextBlock>Library</TextBlock>
     </Grid>
 </UserControl>

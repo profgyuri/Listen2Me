@@ -4,30 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Listen2Me.WPF.Views.Components"
-             xmlns:componentVm="clr-namespace:Listen2Me.MVVM.ViewModels.Components;assembly=Listen2Me.MVVM"
-             xmlns:wpf="clr-namespace:Listen2Me.WPF"
              mc:Ignorable="d"
-             Background="{DynamicResource Brush.Background.Secondary}"
-             Foreground="{DynamicResource Brush.Foreground.Secondary}"
-             d:DataContext="{d:DesignInstance componentVm:NavBarViewModel}"
-             d:DesignHeight="300" d:DesignWidth="100">
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition Height="50" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="50" />
-        </Grid.RowDefinitions>
-        
-        <local:NavBarItem Grid.Row="0" Icon="MusicNote" Text="Player" 
-                          IsActive="{Binding CurrentPath, Converter={StaticResource PathComparer}, ConverterParameter=home}"
-                          Command="{Binding NavigateToCommand}" CommandParameter="home"/>
-        <local:NavBarItem Grid.Row="1" Icon="Gear" Text="Settings" 
-                          IsActive="{Binding CurrentPath, Converter={StaticResource PathComparer}, ConverterParameter=settings}"
-                          Command="{Binding NavigateToCommand}" CommandParameter="settings"/>
-        
-        <local:NavBarItem Grid.Row="3" Icon="DoorOpen" Text="Close" 
-                          Command="{Binding CloseCommand}"/>
-    </Grid>
+             d:DesignHeight="300" d:DesignWidth="300">
+    <ItemsControl ItemsSource="{Binding Items, RelativeSource={RelativeSource AncestorType=UserControl}}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+    </ItemsControl>
 </UserControl>
