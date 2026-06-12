@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="Listen2Me.WPF.Views.Tabs.Settings.AppearanceTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:settingsTabVm="clr-namespace:Listen2Me.MVVM.ViewModels.Tabs.Settings;assembly=Listen2Me.MVVM"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance settingsTabVm:AppearanceTabViewModel}"
+             d:DesignHeight="300" d:DesignWidth="600">
+    <Grid>
+        <TextBlock>Appearance</TextBlock>
+    </Grid>
+</UserControl>

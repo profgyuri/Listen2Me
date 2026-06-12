@@ -80,34 +80,7 @@ public partial class NavBarItem : UserControl
             "Command",
             typeof(ICommand),
             typeof(NavBarItem),
-            new PropertyMetadata(null, OnCommandChanged));
-
-    public static ICommand GetCommand(DependencyObject obj)
-        => (ICommand)obj.GetValue(CommandProperty);
-
-    public static void SetCommand(DependencyObject obj, ICommand value)
-        => obj.SetValue(CommandProperty, value);
-    
-    private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not UIElement element) return;
-
-        // This logic will trigger the command
-        if (e.OldValue is ICommand)
-            element.MouseLeftButtonUp -= OnMouseLeftButtonUp;
-
-        if (e.NewValue is ICommand)
-            element.MouseLeftButtonUp += OnMouseLeftButtonUp;
-    }
-    
-    private static void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    {
-        if (sender is not UIElement element) return;
-
-        var command = GetCommand(element);
-        if (command?.CanExecute(null) == true)
-            command.Execute(null);
-    }
+            new PropertyMetadata(null));
     #endregion
     
     #region IsActive Attached Property

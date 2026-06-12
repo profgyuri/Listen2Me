@@ -29,7 +29,25 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
         
-            <ContentControl Grid.Column="0" Content="{Binding NavBarViewModel}"/>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <components:NavBar Grid.Row="0">
+                    <components:NavBarItem Icon="MusicNote" Text="Player"
+                                           IsActive="{Binding CurrentRoute, Converter={StaticResource PathComparer}, ConverterParameter=home}"
+                                           Command="{Binding NavigateCommand}" CommandParameter="home"/>
+                    <components:NavBarItem Icon="Gear" Text="Settings" 
+                                           IsActive="{Binding CurrentRoute, Converter={StaticResource PathComparer}, ConverterParameter=settings}"
+                                           Command="{Binding NavigateCommand}" CommandParameter="settings"/>
+                </components:NavBar>
+                <components:NavBar Grid.Row="2">
+                    <components:NavBarItem Icon="DoorOpen" Text="Close" 
+                                           Command="{Binding CloseCommand}"/>
+                </components:NavBar>
+            </Grid>
             <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}"/>
         </Grid>
     </Grid>

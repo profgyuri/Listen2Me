@@ -6,8 +6,8 @@
              xmlns:layoutVm="clr-namespace:Listen2Me.MVVM.ViewModels.Layouts;assembly=Listen2Me.MVVM"
              xmlns:widgetVm="clr-namespace:Listen2Me.MVVM.ViewModels.Widgets;assembly=Listen2Me.MVVM"
              xmlns:widgets="clr-namespace:Listen2Me.WPF.Views.Widgets"
-             xmlns:componentVm="clr-namespace:Listen2Me.MVVM.ViewModels.Components;assembly=Listen2Me.MVVM"
-             xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components">
+             xmlns:settingsTabVm="clr-namespace:Listen2Me.MVVM.ViewModels.Tabs.Settings;assembly=Listen2Me.MVVM"
+             xmlns:settingsTabs="clr-namespace:Listen2Me.WPF.Views.Tabs.Settings">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,6 +25,19 @@
                 <layouts:SettingsLayout/>
             </DataTemplate>
             
+            <DataTemplate DataType="{x:Type settingsTabVm:AppearanceTabViewModel}">
+                <settingsTabs:AppearanceTab/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type settingsTabVm:GeneralTabViewModel}">
+                <settingsTabs:GeneralTab/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type settingsTabVm:LibraryTabViewModel}">
+                <settingsTabs:LibraryTab/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type settingsTabVm:PlaybackTabViewModel}">
+                <settingsTabs:PlaybackTab/>
+            </DataTemplate>
+            
             <DataTemplate DataType="{x:Type widgetVm:PlayerControlsWidgetViewModel}">
                 <widgets:PlayerControlsWidget/>
             </DataTemplate>
@@ -36,10 +49,6 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type widgetVm:TrackInfoWidgetViewModel}">
                 <widgets:TrackInfoWidget/>
-            </DataTemplate>
-            
-            <DataTemplate DataType="{x:Type componentVm:NavBarViewModel}">
-                <components:NavBar/>
             </DataTemplate>
             
         </ResourceDictionary>

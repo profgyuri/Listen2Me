@@ -9,7 +9,7 @@ namespace Listen2Me.MVVM.ViewModels;
 /// <summary>
 /// Provides base observable behavior, one-time async initialization, and safe async execution helpers.
 /// </summary>
-public abstract class ViewModelBase : ObservableObject, IInitializeAsync, IDisposable
+public abstract partial class ViewModelBase : ObservableObject, IInitializeAsync, IDisposable
 {
     protected readonly IErrorHandler ErrorHandler;
     protected readonly ILogger Logger;
@@ -44,6 +44,11 @@ public abstract class ViewModelBase : ObservableObject, IInitializeAsync, IDispo
     /// Gets a value that indicates whether this instance was initialized successfully.
     /// </summary>
     public bool IsInitialized => Volatile.Read(ref _isInitialized) == 1;
+
+    /// <summary>
+    /// Gets or sets a value that indicates whether this instance is actively visible.
+    /// </summary>
+    [ObservableProperty] private bool _isActive;
 
     /// <summary>
     /// Registers a message handler for the current view model instance.
@@ -146,6 +151,12 @@ public abstract class ViewModelBase : ObservableObject, IInitializeAsync, IDispo
             Logger.Error(exception, "ViewModel operation failed in {Context}.", context);
             await ErrorHandler.HandleAsync(exception, context, cancellationToken).ConfigureAwait(false);
         }
+    }
+
+    /// <inheritdoc />
+    public override string? ToString()
+    {
+        return GetType()?.FullName ?? base.ToString();
     }
 
     private void ThrowIfDisposed()
