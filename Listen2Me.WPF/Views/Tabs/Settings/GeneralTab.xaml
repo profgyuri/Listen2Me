@@ -4,10 +4,57 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:settingsTabVm="clr-namespace:Listen2Me.MVVM.ViewModels.Tabs.Settings;assembly=Listen2Me.MVVM"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance settingsTabVm:GeneralTabViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
-    <Grid>
-        <TextBlock>General</TextBlock>
+    <Grid ColumnDefinitions="200,*"
+          RowDefinitions="Auto,Auto,Auto,*">
+        <CheckBox Grid.Column="0" Grid.ColumnSpan="2"
+                  x:Name="PostgresCheckBox"
+                  Content="Save to PostgreSQL server"
+                  IsChecked="{Binding UsePostgres, FallbackValue=True}"/>
+        
+        <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+            <TextBlock Text="If you have a PostgreSQL server set up, you can use it to store the song metadata. App settings will remain in your %AppData% folder." 
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center" Margin="10"/>
+            <Button x:Name="AppDataButton" HorizontalAlignment="Left" Click="AppDataButton_OnClick">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Open AppData folder"/>
+                    <materialDesign:PackIcon Kind="FileSearchOutline" VerticalContentAlignment="Center" Margin="2 2 0 0"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2"
+              ColumnDefinitions="200,*"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+              Visibility="{Binding ElementName=PostgresCheckBox, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="PostgreSQL server IP:" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding PostgresIp}" VerticalAlignment="Center"/>
+        
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="PostgreSQL server port:" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding PostgresPort}" VerticalAlignment="Center"/>
+            
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="Database:" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Database}" VerticalAlignment="Center"/>
+        
+            <TextBlock Grid.Column="0" Grid.Row="3" Text="User:" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding UserName}" VerticalAlignment="Center"/>
+        
+            <TextBlock Grid.Column="0" Grid.Row="4" Text="Password:" VerticalAlignment="Center"/>
+            <PasswordBox Grid.Column="1" Grid.Row="4" x:Name="PasswordBox" VerticalAlignment="Center"/>
+        
+            <Grid Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2"
+                  ColumnDefinitions="*,2*,*,2*,*"
+                  Margin="0 16 0 0">
+                <Button Grid.Column="1" x:Name="TestConnButton"
+                        Click="TestConnButton_OnClick"
+                        Content="Test Connection"/>
+                <Button Grid.Column="3"
+                        Content="Save"/>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
