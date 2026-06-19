@@ -1,5 +1,7 @@
 ﻿using Listen2Me.MVVM.Modules;
 using Listen2Me.MVVM.Navigation;
+using Listen2Me.MVVM.Settings;
+using Listen2Me.MVVM.Settings.Appearance;
 using Listen2Me.MVVM.Settings.Appearance.Themes;
 using Listen2Me.WPF.Styles.Themes;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,10 @@ public class SettingsModule : IModule
     
     public void RegisterServices(IServiceCollection services)
     {
+        services.AddSingleton<ISettings, Settings>();
+        
+        services.AddSingleton<IAppearanceSettings, AppearanceSettings>();
+        
         services.AddSingleton<IThemeManager, ThemeManager>();
     }
 

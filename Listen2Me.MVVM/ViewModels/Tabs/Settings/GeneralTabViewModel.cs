@@ -15,7 +15,7 @@ public partial class GeneralTabViewModel : ViewModelBase
     [ObservableProperty] private int _postgresPort = 5432;
     [ObservableProperty] private string _database = "postgres";
     [ObservableProperty] private string _userName = "postgres";
-    [ObservableProperty] private ConnectionState _connectionState = ConnectionState.Closed;
+    [ObservableProperty] private ConnectionState _connectionState;
     
     
     public GeneralTabViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger) 
@@ -26,7 +26,6 @@ public partial class GeneralTabViewModel : ViewModelBase
     [RelayCommand]
     private async Task TestConnection(string password = "")
     {
-        var logSuccess = false;
         var connectionString = new NpgsqlConnectionStringBuilder()
         {
             Host = PostgresIp,
@@ -42,18 +41,17 @@ public partial class GeneralTabViewModel : ViewModelBase
         try
         {
             await connection.OpenAsync();
-            logSuccess = true;
+            ConnectionState = ConnectionState.Open;
+            Logger.Information("Test connection succeeded.");
         }
-        catch (NpgsqlException)
+        catch (NpgsqlException ex)
         {
-            Logger.Error("Test connection failed.");
+            ConnectionState = ConnectionState.Broken;
+            Logger.Error("Failed test connection: {0}", ex.Message);
         }
         finally
         {
-            ConnectionState = connection.State;
             await connection.CloseAsync();
         }
-        
-        if (logSuccess) Logger.Information("Test connection succeeded.");
     }
 }

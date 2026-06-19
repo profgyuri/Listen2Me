@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Messages;
 using Listen2Me.MVVM.Navigation;
+using Listen2Me.MVVM.Settings;
 using Listen2Me.MVVM.Settings.Appearance.Themes;
 using Serilog;
 
@@ -12,22 +13,22 @@ namespace Listen2Me.MVVM.ViewModels.Shells;
 
 public partial class MainShellViewModel : ShellViewModelBase
 {
-    private readonly IThemeManager _themeManager;
+    private readonly ISettings _settings;
     
     [ObservableProperty] private WindowState _windowState;
     
     public MainShellViewModel(INavigationService navigationService, NavigationState navigationState, 
-        IErrorHandler errorHandler, ILogger logger, IMessenger messenger, IThemeManager themeManager) 
+        IErrorHandler errorHandler, ILogger logger, IMessenger messenger, ISettings settings) 
         : base(navigationService, navigationState, errorHandler, logger, messenger)
     {
-        _themeManager = themeManager;
+        _settings = settings;
     }
 
     /// <inheritdoc />
     public override async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        _themeManager.SetAccent(Accents.Blue);
-        _themeManager.SetTheme(Themes.Dark);
+        _settings.Appearance.ThemeManager.SetAccent(Accents.Blue);
+        _settings.Appearance.ThemeManager.SetTheme(Themes.Dark);
         
         await NavigationService.NavigateToRouteAsync("home", cancellationToken: cancellationToken);
         

@@ -3,4 +3,5 @@
                     xmlns:wpf="clr-namespace:Listen2Me.WPF">
     <wpf:PathComparer x:Key="PathComparer"/>
     <wpf:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <wpf:DbConnectionStateToBrushConverter x:Key="DbConnectionStateToBrushConverter"/>
 </ResourceDictionary>
