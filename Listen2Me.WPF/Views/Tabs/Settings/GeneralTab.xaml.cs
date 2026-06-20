@@ -11,19 +11,4 @@ public partial class GeneralTab : UserControl
     {
         InitializeComponent();
     }
-
-    private void AppDataButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException("Open listen2me folder in app data folder");
-    }
-
-    private async void TestConnButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (DataContext is not GeneralTabViewModel vm)
-        {
-            throw new InvalidOperationException("DataContext is not of type GeneralTabViewModel");
-        }
-        
-        await vm.TestConnectionCommand.ExecuteAsync(PasswordBox.Password);
-    }
 }

@@ -37,6 +37,9 @@
             <DataTemplate DataType="{x:Type settingsTabVm:PlaybackTabViewModel}">
                 <settingsTabs:PlaybackTab/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type settingsTabVm:StorageTabViewModel}">
+                <settingsTabs:StorageTab/>
+            </DataTemplate>
             
             <DataTemplate DataType="{x:Type widgetVm:PlayerControlsWidgetViewModel}">
                 <widgets:PlayerControlsWidget/>

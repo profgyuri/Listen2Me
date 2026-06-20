@@ -8,61 +8,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance settingsTabVm:GeneralTabViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
-    <Grid ColumnDefinitions="200,*"
-          RowDefinitions="Auto,Auto,Auto,*">
-        <CheckBox Grid.Column="0" Grid.ColumnSpan="2"
-                  x:Name="PostgresCheckBox"
-                  Content="Save to PostgreSQL server"
-                  IsChecked="{Binding UsePostgres, FallbackValue=True}"/>
+    <Grid>
         
-        <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-            <TextBlock Text="If you have a PostgreSQL server set up, you can use it to store the song metadata. Every data will remain available in your %AppData% folder, regardless of this setting." 
-                       TextWrapping="Wrap"
-                       VerticalAlignment="Center" Margin="10"/>
-            <Button x:Name="AppDataButton" HorizontalAlignment="Left" Click="AppDataButton_OnClick"
-                    Margin="0 6 0 12">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Open AppData folder"/>
-                    <materialDesign:PackIcon Kind="FileSearchOutline" VerticalContentAlignment="Center" Margin="2 2 0 0"/>
-                </StackPanel>
-            </Button>
-        </StackPanel>
-        
-        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2"
-              ColumnDefinitions="200,*"
-              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-              Visibility="{Binding ElementName=PostgresCheckBox, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="PostgreSQL server IP:" VerticalAlignment="Center"/>
-            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding PostgresIp}" VerticalAlignment="Center"/>
-        
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="PostgreSQL server port:" VerticalAlignment="Center"/>
-            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding PostgresPort}" VerticalAlignment="Center"/>
-            
-            <TextBlock Grid.Column="0" Grid.Row="2" Text="Database:" VerticalAlignment="Center"/>
-            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Database}" VerticalAlignment="Center"/>
-        
-            <TextBlock Grid.Column="0" Grid.Row="3" Text="User:" VerticalAlignment="Center"/>
-            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding UserName}" VerticalAlignment="Center"/>
-        
-            <TextBlock Grid.Column="0" Grid.Row="4" Text="Password:" VerticalAlignment="Center"/>
-            <PasswordBox Grid.Column="1" Grid.Row="4" x:Name="PasswordBox" VerticalAlignment="Center"/>
-        
-            <Grid Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2"
-                  ColumnDefinitions="*,2*,*,2*,*"
-                  Margin="0 16 0 0">
-                <Button Grid.Column="1" x:Name="TestConnButton"
-                        Click="TestConnButton_OnClick">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Test Connection"/>
-                        <materialDesign:PackIcon Width="12" Height="12" VerticalAlignment="Center" Margin="6 0 0 0"
-                                                 VerticalContentAlignment="Center" Padding="0"
-                                                 Kind="CheckboxBlankCircle"
-                                                 Foreground="{Binding ConnectionState, Converter={StaticResource DbConnectionStateToBrushConverter}}"/>
-                    </StackPanel>
-                </Button>
-                <Button Grid.Column="3"
-                        Content="Save"/>
-            </Grid>
-        </Grid>
     </Grid>
 </UserControl>

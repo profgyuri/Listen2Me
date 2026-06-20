@@ -8,7 +8,7 @@
              mc:Ignorable="d"
              Foreground="{DynamicResource Brush.Foreground.Secondary}"
              d:DataContext="{d:DesignInstance layouts:SettingsLayoutViewModel}"
-             d:DesignHeight="300" d:DesignWidth="700">
+             d:DesignHeight="500" d:DesignWidth="700">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -32,6 +32,10 @@
                                    Command="{Binding SwitchToCommand}" 
                                    CommandParameter="{Binding PlaybackTab}"
                                    IsActive="{Binding PlaybackTab.IsActive}"/>
+            <components:NavBarItem Text="Storage" Icon="Storage" 
+                                   Command="{Binding SwitchToCommand}" 
+                                   CommandParameter="{Binding StorageTab}"
+                                   IsActive="{Binding StorageTab.IsActive}"/>
         </components:NavBar>
         
         <ContentControl Grid.Column="1" Content="{Binding CurrentTab}"/>
