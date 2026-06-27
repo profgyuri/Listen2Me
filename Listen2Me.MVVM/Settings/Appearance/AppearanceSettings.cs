@@ -2,8 +2,10 @@
 
 namespace Listen2Me.MVVM.Settings.Appearance;
 
-/// <inheritdoc cref="IAppearanceSettings"/>
-public class AppearanceSettings : IAppearanceSettings
+/// <summary>
+/// Holds settings for the appearance of the application.
+/// </summary>
+public class AppearanceSettings : JsonSettingsMemory
 {
     public AppearanceSettings(IThemeManager themeManager)
     {
@@ -12,4 +14,6 @@ public class AppearanceSettings : IAppearanceSettings
 
     /// <inheritdoc cref="IThemeManager"/>
     public IThemeManager ThemeManager { get; set; }
+
+    protected override string FileName => "appearance.json";
 }

@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Listen2Me.MVVM\Listen2Me.MVVM.csproj"/>
+        <ProjectReference Include="..\Listen2Me.MVVM\Listen2Me.MVVM.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -32,6 +32,10 @@
         <None Update="appsettings.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Properties\Settings.settings">
+          <Generator>SettingsSingleFileGenerator</Generator>
+          <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -39,6 +43,14 @@
         <Link>Resources\Listen2Me.ico</Link>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Resource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Properties\Settings.Designer.cs">
+        <DesignTimeSharedInput>True</DesignTimeSharedInput>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Settings.settings</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

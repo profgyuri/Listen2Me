@@ -25,4 +25,14 @@ public partial class StorageTab : UserControl
         
         await vm.TestConnectionCommand.ExecuteAsync(PasswordBox.Password);
     }
+
+    private async void SaveConnButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is not StorageTabViewModel vm)
+        {
+            throw new InvalidOperationException("DataContext is not of type GeneralTabViewModel");
+        }
+        
+        await vm.SaveConnectionCommand.ExecuteAsync(PasswordBox.Password);
+    }
 }

@@ -1,11 +1,10 @@
-﻿namespace Listen2Me.MVVM.Settings.Storage;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class StorageSettings : IStorageSettings
+namespace Listen2Me.MVVM.Settings.Storage;
+
+public partial class StorageSettings : JsonSettingsMemory
 {
-    public PostgresStorageSettings PostgresStorage { get; set; }
+    [ObservableProperty] private PostgresStorageSettings _postgresStorage;
 
-    public StorageSettings()
-    {
-        //todo: load storage settings
-    }
+    protected override string FileName => "storage.json";
 }

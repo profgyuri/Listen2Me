@@ -8,9 +8,19 @@ namespace Listen2Me.MVVM.Settings;
 /// </summary>
 public interface ISettings
 {
-    /// <inheritdoc cref="IAppearanceSettings"/>
-    public IAppearanceSettings Appearance { get; set; }
+    /// <inheritdoc cref="AppearanceSettings"/>
+    public AppearanceSettings Appearance { get; set; }
     
-    /// <inheritdoc cref="IStorageSettings"/>
-    public IStorageSettings Storage { get; set; }
+    /// <inheritdoc cref="StorageSettings"/>
+    public StorageSettings Storage { get; set; }
+    
+    /// <summary>
+    /// Saves all settings asynchronously.
+    /// </summary>
+    Task SaveAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Loads all settings asynchronously.
+    /// </summary>
+    Task LoadAsync(CancellationToken ct = default);
 }
