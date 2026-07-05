@@ -23,6 +23,9 @@ public class TabsModule : IModule
 
         services.AddSingleton<PlaybackTab>();
         services.AddSingleton<PlaybackTabViewModel>();
+        
+        services.AddSingleton<StorageTab>();
+        services.AddSingleton<StorageTabViewModel>();
     }
 
     public void RegisterNavigation(INavigationRegistry registry)

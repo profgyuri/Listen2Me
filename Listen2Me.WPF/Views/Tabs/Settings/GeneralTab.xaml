@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:settingsTabVm="clr-namespace:Listen2Me.MVVM.ViewModels.Tabs.Settings;assembly=Listen2Me.MVVM"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance settingsTabVm:GeneralTabViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid>
-        <TextBlock>General</TextBlock>
+        
     </Grid>
 </UserControl>

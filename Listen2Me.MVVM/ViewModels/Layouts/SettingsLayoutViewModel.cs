@@ -14,16 +14,18 @@ public partial class SettingsLayoutViewModel : ViewModelBase
     public AppearanceTabViewModel AppearanceTab { get; init; }
     public LibraryTabViewModel LibraryTab { get; init; }
     public PlaybackTabViewModel PlaybackTab { get; init; }
+    public StorageTabViewModel StorageTab { get; init; }
     
     public SettingsLayoutViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
         GeneralTabViewModel generalTab, AppearanceTabViewModel appearanceTab, 
-        LibraryTabViewModel libraryTab, PlaybackTabViewModel playbackTab) 
+        LibraryTabViewModel libraryTab, PlaybackTabViewModel playbackTab, StorageTabViewModel storageTab) 
         : base(errorHandler, logger, messenger)
     {
         GeneralTab = generalTab;
         AppearanceTab = appearanceTab;
         LibraryTab = libraryTab;
         PlaybackTab = playbackTab;
+        StorageTab = storageTab;
         
         SwitchTo(GeneralTab).ConfigureAwait(false);
     }
