@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Listen2Me.MVVM.ErrorHandling;
+using Listen2Me.MVVM.Persistence;
 using Listen2Me.MVVM.Settings;
 using Listen2Me.MVVM.Settings.Storage;
 using Listen2Me.MVVM.Settings.Storage.Credentials;
@@ -15,6 +16,7 @@ public partial class StorageTabViewModel : ViewModelBase
 {
     private readonly ISettings _settings;
     private readonly ICredentialSafe _credentialSafe;
+    private readonly IConnectionStringBuilder _connectionStringBuilder;
 
     [ObservableProperty] private PostgresStorageSettings _postgres;
     [NotifyPropertyChangedFor(nameof(IsSaveButtonEnabled)), 
@@ -23,11 +25,12 @@ public partial class StorageTabViewModel : ViewModelBase
     public bool IsSaveButtonEnabled => ConnectionState == ConnectionState.Open;
     
     public StorageTabViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, ISettings settings, 
-        ICredentialSafe credentialSafe) 
+        ICredentialSafe credentialSafe, IConnectionStringBuilder connectionStringBuilder) 
         : base(errorHandler, logger, messenger)
     {
         _settings = settings;
         _credentialSafe = credentialSafe;
+        _connectionStringBuilder = connectionStringBuilder;
     }
 
     /// <inheritdoc />
@@ -40,16 +43,7 @@ public partial class StorageTabViewModel : ViewModelBase
     [RelayCommand]
     private async Task TestConnection(string password = "")
     {
-        var connectionString = new NpgsqlConnectionStringBuilder()
-        {
-            Host = Postgres.Host,
-            Port = Postgres.Port,
-            Database = Postgres.Database,
-            Username = Postgres.Username,
-            Password = password,
-            Pooling = true,
-            Timeout = 15
-        }.ConnectionString;
+        var connectionString = _connectionStringBuilder.Build(Postgres, password);
         
         await using var connection = new NpgsqlConnection(connectionString);
         try

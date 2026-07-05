@@ -1,5 +1,6 @@
 ﻿using Listen2Me.MVVM.Modules;
 using Listen2Me.MVVM.Navigation;
+using Listen2Me.MVVM.Persistence;
 using Listen2Me.MVVM.Settings;
 using Listen2Me.MVVM.Settings.Appearance;
 using Listen2Me.MVVM.Settings.Appearance.Themes;
@@ -24,6 +25,7 @@ public class SettingsModule : IModule
         
         services.AddSingleton<IThemeManager, ThemeManager>();
         services.AddSingleton<ICredentialSafe, CredentialSafe>();
+        services.AddScoped<IConnectionStringBuilder, PostgresConnectionStringBuilder>();
     }
 
     public void RegisterNavigation(INavigationRegistry registry)

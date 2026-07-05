@@ -13,4 +13,6 @@ public static class Constants
     public static string SettingsFolder = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "Listen2Me", "Settings");
+    
+    public static string SqLiteConnectionString = "Data Source=Listen2Me.db";
 }
