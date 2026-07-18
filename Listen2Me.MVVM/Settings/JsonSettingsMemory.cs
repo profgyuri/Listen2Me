@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Listen2Me.MVVM.Settings;
@@ -52,7 +53,8 @@ public abstract class JsonSettingsMemory : ObservableObject, ISettingsMemory
             if (deserialized is null)
                 return;
 
-            foreach (var property in GetType().GetProperties().Where(p => p.CanWrite))
+            foreach (var property in GetType().GetProperties().Where(p => 
+                         p.CanWrite && p.CustomAttributes.All(a => a.AttributeType != typeof(JsonIgnoreAttribute))))
             {
                 property.SetValue(this, property.GetValue(deserialized));
             }

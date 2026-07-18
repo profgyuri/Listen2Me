@@ -7,7 +7,25 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance settingsTabVm:AppearanceTabViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
-    <Grid>
-        <TextBlock>Appearance</TextBlock>
+    <Grid ColumnDefinitions="200, *" RowDefinitions="Auto, Auto, Auto, Auto">
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Font Family"/>
+        <ComboBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding FontFamilies}"
+                  SelectedItem="{Binding SelectedFontFamily}"/>
+        
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="Theme"/>
+        <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Themes}"
+                  SelectedItem="{Binding SelectedTheme}"/>
+        
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Accent Color"/>
+        <ComboBox Grid.Column="1" Grid.Row="2" ItemsSource="{Binding AccentColors}"
+                  SelectedItem="{Binding SelectedAccentColor}"/>
+        
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="Main View Grid"/>
+        <StackPanel Grid.Column="1" Grid.Row="3" Margin="4" Orientation="Horizontal">
+            <RadioButton Content="Fixed" IsChecked="{Binding IsGridEditable, Converter={StaticResource BoolNegatorConverter}}"
+                         Style="{StaticResource MaterialDesignTabRadioButtonBottom}"/>
+            <RadioButton Content="Editable" IsChecked="{Binding IsGridEditable}"
+                         Style="{StaticResource MaterialDesignTabRadioButtonBottom}" />
+        </StackPanel>
     </Grid>
 </UserControl>

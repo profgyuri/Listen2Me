@@ -4,4 +4,5 @@
     <wpf:PathComparer x:Key="PathComparer"/>
     <wpf:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <wpf:DbConnectionStateToBrushConverter x:Key="DbConnectionStateToBrushConverter"/>
+    <wpf:BoolNegatorConverter x:Key="BoolNegatorConverter"/>
 </ResourceDictionary>

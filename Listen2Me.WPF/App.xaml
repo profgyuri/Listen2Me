@@ -11,9 +11,13 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!-- For some reason, nested resources only load at startup and don't change during runtime.
+                     This approach is still perfectly valid for value converters and style collections,
+                     but style files that can be substituted have to be referenced directly here. -->
                 <materialDesign:CustomColorTheme BaseTheme="Light" PrimaryColor="DarkSlateBlue" SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
-                <ResourceDictionary Source="Styles/Themes/ThemeDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/Themes/Light.xaml"/>
+                <ResourceDictionary Source="Styles/Themes/Accent.Blue.xaml"/>
                 <ResourceDictionary Source="Styles/StyleDictionary.xaml"/>
                 <ResourceDictionary Source="Styles/ValueConverterDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>

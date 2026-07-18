@@ -23,7 +23,7 @@ public class SettingsModule : IModule
         services.AddSingleton<AppearanceSettings>();
         services.AddSingleton<StorageSettings>();
         
-        services.AddSingleton<IThemeManager, ThemeManager>();
+        services.AddSingleton<IThemeManager, SimplifiedThemeManager>();
         services.AddSingleton<ICredentialSafe, CredentialSafe>();
         services.AddScoped<IConnectionStringBuilder, PostgresConnectionStringBuilder>();
     }

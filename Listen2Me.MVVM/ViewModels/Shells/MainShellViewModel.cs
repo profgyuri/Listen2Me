@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -6,7 +7,6 @@ using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Messages;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Settings;
-using Listen2Me.MVVM.Settings.Appearance.Themes;
 using Serilog;
 
 namespace Listen2Me.MVVM.ViewModels.Shells;
@@ -16,6 +16,7 @@ public partial class MainShellViewModel : ShellViewModelBase
     private readonly ISettings _settings;
     
     [ObservableProperty] private WindowState _windowState;
+    [ObservableProperty] private FontFamily _fontFamily;
     
     public MainShellViewModel(INavigationService navigationService, NavigationState navigationState, 
         IErrorHandler errorHandler, ILogger logger, IMessenger messenger, ISettings settings) 
@@ -27,12 +28,17 @@ public partial class MainShellViewModel : ShellViewModelBase
     /// <inheritdoc />
     public override async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        _settings.Appearance.ThemeManager.SetAccent(Accents.Blue);
-        _settings.Appearance.ThemeManager.SetTheme(Themes.Dark);
+        await _settings.LoadAsync(cancellationToken).ConfigureAwait(false);
+        
+        var accent = _settings.Appearance.Accent;
+        var theme = _settings.Appearance.Theme;
+        _settings.Appearance.ThemeManager.SetAccent(accent);
+        _settings.Appearance.ThemeManager.SetTheme(theme);
         
         await NavigationService.NavigateToRouteAsync("home", cancellationToken: cancellationToken);
         
         RegisterMessage<NavBarNavigationMessage>(OnNavBarNavigationMessage);
+        RegisterMessage<FontFamily>(_ => OnFontFamilyChangedMessage());
         
         Logger.Information("MainShellViewModel initialized.");
     }
@@ -41,6 +47,12 @@ public partial class MainShellViewModel : ShellViewModelBase
     {
         NavigationService.NavigateToRouteAsync(path.Value);
         Logger.Information("Navigated to {Path}", path.Value);
+    }
+
+    private void OnFontFamilyChangedMessage()
+    {
+        FontFamily = _settings.Appearance.FontFamily;
+        Logger.Information("Font family changed to {FontFamily}", FontFamily);
     }
 
     #region Window State Buttons

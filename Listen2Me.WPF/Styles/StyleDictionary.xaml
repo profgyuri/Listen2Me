@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="NavBarStyles.xaml"/>
+        <ResourceDictionary Source="/Styles/NavBarStyles.xaml"/>
+        <ResourceDictionary Source="/Styles/GlobalDefaults.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

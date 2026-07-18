@@ -19,12 +19,6 @@
     </UserControl.Resources>
     
     <DockPanel>
-        <!-- Edit mode toolbar -->
-        <ToolBar DockPanel.Dock="Top">
-            <ToggleButton IsChecked="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                          Content="Edit Layout"/>
-        </ToolBar>
-
         <!-- 2×2 grid -->
         <Grid>
             <Grid.RowDefinitions>

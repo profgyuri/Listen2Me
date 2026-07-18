@@ -5,6 +5,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using GongSolutions.Wpf.DragDrop;
 using Listen2Me.MVVM.ErrorHandling;
+using Listen2Me.MVVM.Messages;
+using Listen2Me.MVVM.Settings;
 using Listen2Me.MVVM.ViewModels.Widgets;
 using Serilog;
 
@@ -12,15 +14,19 @@ namespace Listen2Me.MVVM.ViewModels.Layouts;
 
 public sealed partial class MainLayoutViewModel : ViewModelBase, IDropTarget
 {
-    [ObservableProperty] private bool _isEditMode = true;
+    private readonly ISettings _settings;
+    
+    [ObservableProperty] private bool _isEditMode;
 
     public ObservableCollection<ViewModelBase> Widgets { get; }
     
     public MainLayoutViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
         TrackInfoWidgetViewModel trackInfoWidgetViewModel, PlayerControlsWidgetViewModel playerControlsWidgetViewModel,
-        SearchResultsWidgetViewModel searchResultsWidgetViewModel, PlaylistWidgetViewModel playlistWidgetViewModel) 
+        SearchResultsWidgetViewModel searchResultsWidgetViewModel, PlaylistWidgetViewModel playlistWidgetViewModel,
+        ISettings settings) 
         : base(errorHandler, logger, messenger)
     {
+        _settings = settings;
         var orderedWidgets = new List<WidgetViewModel>([
             trackInfoWidgetViewModel, 
             playerControlsWidgetViewModel, 
@@ -28,6 +34,14 @@ public sealed partial class MainLayoutViewModel : ViewModelBase, IDropTarget
             playlistWidgetViewModel
         ]).OrderBy(w => w.Order).ToList();
         Widgets = new(orderedWidgets);
+        IsEditMode = _settings.Appearance.IsGridEditable;
+    }
+
+    public override async Task InitializeAsync(CancellationToken cancellationToken = default)
+    {
+        RegisterMessage<IsGridEditableChangedMessage>(_ => IsEditMode = _settings.Appearance.IsGridEditable);
+        
+        await base.InitializeAsync(cancellationToken);
     }
 
     #region GongSolutions.Wpf.DragDrop.IDropTarget

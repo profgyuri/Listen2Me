@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Polly;
 using Polly.Retry;
+using Serilog;
 using Serilog.Core;
 
 namespace Listen2Me.MVVM.Persistence;
@@ -13,12 +14,12 @@ public sealed class SharedDataContext : ISharedDbContext
     private readonly SqLiteDataContext _sqLiteDataContext;
     private readonly PostgresContextFactory _postgresDataContextFactory;
     private readonly ISettings _settings;
-    private readonly Logger _logger;
+    private readonly ILogger _logger;
     
     private readonly AsyncRetryPolicy _postgresRetryPolicy;
 
     public SharedDataContext(SqLiteDataContext sqLiteDataContext, PostgresContextFactory postgresDataContextFactory, 
-        ISettings settings, Logger logger)
+        ISettings settings, ILogger logger)
     {
         _sqLiteDataContext = sqLiteDataContext;
         _postgresDataContextFactory = postgresDataContextFactory;

@@ -1,6 +1,7 @@
 ﻿using Listen2Me.MVVM.Settings.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using Serilog.Core;
 
 namespace Listen2Me.MVVM.Persistence.Syncing;
@@ -11,11 +12,11 @@ namespace Listen2Me.MVVM.Persistence.Syncing;
 public class PostgresSyncReconciliationService: IHostedService, IDisposable
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly Logger _logger;
+    private readonly ILogger _logger;
     private readonly TimeSpan _interval = TimeSpan.FromMinutes(5);
     private Timer? _timer;
 
-    public PostgresSyncReconciliationService(IServiceScopeFactory scopeFactory, Logger logger)
+    public PostgresSyncReconciliationService(IServiceScopeFactory scopeFactory, ILogger logger)
     {
         _scopeFactory = scopeFactory;
         _logger = logger;
