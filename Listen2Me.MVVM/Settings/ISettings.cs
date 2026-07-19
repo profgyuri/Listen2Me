@@ -1,4 +1,5 @@
 ﻿using Listen2Me.MVVM.Settings.Appearance;
+using Listen2Me.MVVM.Settings.Library;
 using Listen2Me.MVVM.Settings.Storage;
 
 namespace Listen2Me.MVVM.Settings;
@@ -13,6 +14,9 @@ public interface ISettings
     
     /// <inheritdoc cref="StorageSettings"/>
     public StorageSettings Storage { get; set; }
+    
+    /// <inheritdoc cref="LibrarySettings"/>
+    public LibrarySettings Library { get; set; }
     
     /// <summary>
     /// Saves all settings asynchronously.

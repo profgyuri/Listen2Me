@@ -4,10 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:settingsTabVm="clr-namespace:Listen2Me.MVVM.ViewModels.Tabs.Settings;assembly=Listen2Me.MVVM"
+             xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance settingsTabVm:LibraryTabViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
-    <Grid>
-        <TextBlock>Library</TextBlock>
+    <Grid ColumnDefinitions="200, *" RowDefinitions="Auto, Auto, Auto, Auto">
+        <components:MusicFolders Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                 ItemSource="{Binding MusicFolders}"/>
+        
     </Grid>
 </UserControl>

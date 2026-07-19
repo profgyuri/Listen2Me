@@ -4,6 +4,7 @@ using Listen2Me.MVVM.Persistence;
 using Listen2Me.MVVM.Settings;
 using Listen2Me.MVVM.Settings.Appearance;
 using Listen2Me.MVVM.Settings.Appearance.Themes;
+using Listen2Me.MVVM.Settings.Library;
 using Listen2Me.MVVM.Settings.Storage;
 using Listen2Me.MVVM.Settings.Storage.Credentials;
 using Listen2Me.WPF.Styles.Themes;
@@ -22,6 +23,7 @@ public class SettingsModule : IModule
         
         services.AddSingleton<AppearanceSettings>();
         services.AddSingleton<StorageSettings>();
+        services.AddSingleton<LibrarySettings>();
         
         services.AddSingleton<IThemeManager, SimplifiedThemeManager>();
         services.AddSingleton<ICredentialSafe, CredentialSafe>();

@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Listen2Me.WPF.Views.Components.MusicFolders"
+             x:Name="Root"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:entities="clr-namespace:Listen2Me.MVVM.Persistence.Entities;assembly=Listen2Me.MVVM"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid ColumnDefinitions="*, *" RowDefinitions="*, Auto">
+        <ItemsControl Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0"
+                      MinHeight="120"
+                      ItemsSource="{Binding ItemSource, ElementName=Root}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type entities:MusicFolder}">
+                    <Grid ColumnDefinitions="Auto, *, Auto">
+                        <TextBlock Text="{Binding Path=Path}" Grid.Column="0" Grid.Row="0"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <CheckBox Grid.Column="2" Grid.Row="0" 
+                                  Content="{materialDesign:PackIcon Kind=Refresh}"
+                                  ToolTip="Search Subfolders"
+                                  IsChecked="{Binding Path=RecursivelyScannable}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+        <Button Grid.Column="0" Grid.Row="1" Content="Add Folder"/>
+        <Button Grid.Column="1" Grid.Row="1" Content="Remove Selected"/>
+    </Grid>
+</UserControl>

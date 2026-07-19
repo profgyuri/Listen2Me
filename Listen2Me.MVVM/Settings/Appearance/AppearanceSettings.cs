@@ -2,7 +2,6 @@
 using System.Text.Json.Serialization;
 using System.Windows.Media;
 using Listen2Me.MVVM.Settings.Appearance.Themes;
-using Serilog;
 
 namespace Listen2Me.MVVM.Settings.Appearance;
 
@@ -11,15 +10,12 @@ namespace Listen2Me.MVVM.Settings.Appearance;
 /// </summary>
 public class AppearanceSettings : JsonSettingsMemory
 {
-    private readonly ILogger _logger;
-
     [JsonConstructor]
     public AppearanceSettings()
     { }
     
-    public AppearanceSettings(IThemeManager themeManager, ILogger logger)
+    public AppearanceSettings(IThemeManager themeManager)
     {
-        _logger = logger;
         ThemeManager = themeManager;
     }
     
