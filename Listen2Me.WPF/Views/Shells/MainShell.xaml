@@ -11,7 +11,9 @@
         Foreground="{DynamicResource Brush.Foreground.Primary}"
         Title="MainWindow" Height="450" Width="800" BorderThickness="0"
         WindowStyle="None" WindowState="{Binding WindowState}"
-        FontFamily="{Binding FontFamily}">
+        FontFamily="{Binding FontFamily}" FontSize="{Binding FontSize}"
+        FontWeight="{Binding IsBold, Converter={StaticResource BoolToBoldConverter}}"
+        FontStyle="{Binding IsItalic, Converter={StaticResource BoolToItalicConverter}}">
     
     <WindowChrome.WindowChrome>
         <WindowChrome x:Name="WindowChrome" CaptionHeight="32" />

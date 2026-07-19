@@ -5,4 +5,6 @@
     <wpf:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <wpf:DbConnectionStateToBrushConverter x:Key="DbConnectionStateToBrushConverter"/>
     <wpf:BoolNegatorConverter x:Key="BoolNegatorConverter"/>
+    <wpf:BoolToItalicConverter x:Key="BoolToItalicConverter"/>
+    <wpf:BoolToBoldConverter x:Key="BoolToBoldConverter"/>
 </ResourceDictionary>

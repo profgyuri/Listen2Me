@@ -4,13 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:settingsTabVm="clr-namespace:Listen2Me.MVVM.ViewModels.Tabs.Settings;assembly=Listen2Me.MVVM"
+             xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance settingsTabVm:AppearanceTabViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid ColumnDefinitions="200, *" RowDefinitions="Auto, Auto, Auto, Auto">
-        <TextBlock Grid.Column="0" Grid.Row="0" Text="Font Family"/>
-        <ComboBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding FontFamilies}"
-                  SelectedItem="{Binding SelectedFontFamily}"/>
+        <components:FontSettings Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" 
+                                 SelectedFontFamily="{Binding SelectedFontFamily}"
+                                 FontSizeSource="{Binding FontSizes}"
+                                 SelectedFontSize="{Binding SelectedFontSize}"
+                                 IsBold="{Binding IsBold}"
+                                 IsItalic="{Binding IsItalic}"/>
         
         <TextBlock Grid.Column="0" Grid.Row="1" Text="Theme"/>
         <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Themes}"

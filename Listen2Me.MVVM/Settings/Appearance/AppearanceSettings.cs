@@ -39,10 +39,25 @@ public class AppearanceSettings : JsonSettingsMemory
     public IThemeManager ThemeManager { get; private set; }
     
     /// <summary>
-    /// Font family to use for the application.
+    /// Default font family to use for the application.
     /// </summary>
     [JsonConverter(typeof(FontFamilyJsonConverter))]
     public FontFamily FontFamily { get; set; } = new("Segoe UI");
+    
+    /// <summary>
+    /// Gets or sets the default font size for the application.
+    /// </summary>
+    public double FontSize { get; set; } = 12;
+    
+    /// <summary>
+    /// Gets or sets a value indicating whether the used font is bold.
+    /// </summary>
+    public bool IsBold { get; set; }
+    
+    /// <summary>
+    /// Gets or sets a value indicating whether the used font is italic.
+    /// </summary>
+    public bool IsItalic { get; set; }
 
     /// <summary>
     /// Theme to use for the application.

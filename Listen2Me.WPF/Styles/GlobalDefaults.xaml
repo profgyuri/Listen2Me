@@ -5,6 +5,9 @@
     </Style>
     <Style TargetType="UserControl">
         <Setter Property="FontFamily" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=FontFamily}"/>
+        <Setter Property="FontSize" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=FontSize}"/>
+        <Setter Property="FontStyle" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=FontStyle}"/>
+        <Setter Property="FontWeight" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=FontWeight}"/>
         <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Background}"/>
     </Style>
 </ResourceDictionary>
