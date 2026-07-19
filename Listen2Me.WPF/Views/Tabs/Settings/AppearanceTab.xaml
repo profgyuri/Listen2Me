@@ -4,10 +4,32 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:settingsTabVm="clr-namespace:Listen2Me.MVVM.ViewModels.Tabs.Settings;assembly=Listen2Me.MVVM"
+             xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance settingsTabVm:AppearanceTabViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
-    <Grid>
-        <TextBlock>Appearance</TextBlock>
+    <Grid ColumnDefinitions="200, *" RowDefinitions="Auto, Auto, Auto, Auto">
+        <components:FontSettings Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" 
+                                 SelectedFontFamily="{Binding SelectedFontFamily}"
+                                 FontSizeSource="{Binding FontSizes}"
+                                 SelectedFontSize="{Binding SelectedFontSize}"
+                                 IsBold="{Binding IsBold}"
+                                 IsItalic="{Binding IsItalic}"/>
+        
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="Theme"/>
+        <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Themes}"
+                  SelectedItem="{Binding SelectedTheme}"/>
+        
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Accent Color"/>
+        <ComboBox Grid.Column="1" Grid.Row="2" ItemsSource="{Binding AccentColors}"
+                  SelectedItem="{Binding SelectedAccentColor}"/>
+        
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="Main View Grid"/>
+        <StackPanel Grid.Column="1" Grid.Row="3" Margin="4" Orientation="Horizontal">
+            <RadioButton Content="Fixed" IsChecked="{Binding IsGridEditable, Converter={StaticResource BoolNegatorConverter}}"
+                         Style="{StaticResource MaterialDesignTabRadioButtonBottom}"/>
+            <RadioButton Content="Editable" IsChecked="{Binding IsGridEditable}"
+                         Style="{StaticResource MaterialDesignTabRadioButtonBottom}" />
+        </StackPanel>
     </Grid>
 </UserControl>
