@@ -8,18 +8,18 @@ namespace Listen2Me.WPF.Navigation;
 public class ShellManager : IShellManager
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly IShellRegistry _shellRegistry;
+    private readonly IViewRegistry _viewRegistry;
 
-    public ShellManager(IServiceProvider serviceProvider, IShellRegistry shellRegistry)
+    public ShellManager(IServiceProvider serviceProvider, IViewRegistry viewRegistry)
     {
         _serviceProvider = serviceProvider;
-        _shellRegistry = shellRegistry;
+        _viewRegistry = viewRegistry;
     }
 
     public async Task OpenShell<TShellViewModel>(CancellationToken ct) where TShellViewModel : ShellViewModelBase
     {
         var shellVm = _serviceProvider.GetRequiredService<TShellViewModel>();
-        var shell = _shellRegistry.Resolve<TShellViewModel>();
+        var shell = _viewRegistry.Resolve<TShellViewModel>();
         
         var window = (Window)ActivatorUtilities.CreateInstance(_serviceProvider, shell, shellVm);
         await shellVm.EnsureInitializedAsync(ct);

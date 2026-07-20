@@ -110,7 +110,7 @@ public partial class App
                 services.AddSingleton<IInitializationTracker, InitializationTracker>();
                 services.AddScoped<INavigationService, NavigationService>();
                 services.AddSingleton<IShellManager, ShellManager>();
-                services.AddSingleton<IShellRegistry, ShellRegistry>();
+                services.AddSingleton<IViewRegistry, ViewRegistry>();
                 services.AddSingleton<IErrorHandler, LoggingErrorHandler>();
                 services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
                 services.AddSingleton<ILogger>(_ => Log.Logger);
@@ -132,12 +132,12 @@ public partial class App
     {
         var moduleCatalog = services.GetRequiredService<IModuleCatalog>();
         var navigationRegistry = services.GetRequiredService<INavigationRegistry>();
-        var shellRegistry = services.GetRequiredService<IShellRegistry>();
+        var shellRegistry = services.GetRequiredService<IViewRegistry>();
 
         foreach (var module in moduleCatalog.LoadModules())
         {
             module.RegisterNavigation(navigationRegistry);
-            module.RegisterShells(shellRegistry);
+            module.RegisterViews(shellRegistry);
         }
     }
 

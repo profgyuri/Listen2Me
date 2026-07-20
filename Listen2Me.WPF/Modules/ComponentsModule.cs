@@ -16,7 +16,7 @@ public class ComponentsModule : IModule
     {
     }
 
-    public void RegisterShells(IShellRegistry registry)
+    public void RegisterViews(IViewRegistry registry)
     {
     }
 }

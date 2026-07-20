@@ -10,7 +10,8 @@
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid ColumnDefinitions="200, *" RowDefinitions="Auto, Auto, Auto, Auto">
         <components:MusicFolders Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                                 ItemSource="{Binding MusicFolders}"/>
+                                 ItemSource="{Binding MusicFolders}"
+                                 AddFolderCommand="{Binding OpenFolderBrowserCommand}"/>
         
     </Grid>
 </UserControl>
