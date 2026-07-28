@@ -4,10 +4,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:shells="clr-namespace:Listen2Me.MVVM.ViewModels.Shells;assembly=Listen2Me.MVVM"
+        xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance shells:FolderBrowserDialogViewModel}"
+        Background="{DynamicResource Brush.Background.Primary}"
+        Foreground="{DynamicResource Brush.Foreground.Primary}"
         Title="FolderBrowserDialog" Height="450" Width="800">
-    <Grid>
-        <Button Content="Test" Click="OnCancel"/>
+    <Grid ColumnDefinitions="150, *" RowDefinitions="*, *">
+        <components:FolderBrowserListContainer Grid.Column="0" Grid.Row="0"
+                                               Header="Drives:"
+                                               ItemsSource="{Binding Drives}"
+                                               SelectedItem="{Binding SelectedDrive}"
+                                               ItemDoubleClickCommand="{Binding NavigateToCommand}"/>
+        
+        <components:FolderBrowserListContainer Grid.Column="0" Grid.Row="1"
+                                               Header="Bookmarks:"
+                                               ItemsSource="{Binding Bookmarks}"
+                                               SelectedItem="{Binding SelectedBookmark}"/>
+        
+        <components:FolderBrowserListContainer Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                                               Header="Folders:"
+                                               ItemsSource="{Binding Folders}"
+                                               SelectedItem="{Binding SelectedFolder}"
+                                               ItemDoubleClickCommand="{Binding NavigateToChildCommand}"/>
     </Grid>
 </Window>

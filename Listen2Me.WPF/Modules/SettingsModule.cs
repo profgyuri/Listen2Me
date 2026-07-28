@@ -7,6 +7,7 @@ using Listen2Me.MVVM.Settings.Appearance.Themes;
 using Listen2Me.MVVM.Settings.Library;
 using Listen2Me.MVVM.Settings.Storage;
 using Listen2Me.MVVM.Settings.Storage.Credentials;
+using Listen2Me.MVVM.System.Browsing;
 using Listen2Me.WPF.Styles.Themes;
 using Microsoft.Extensions.DependencyInjection;
 using Settings = Listen2Me.MVVM.Settings.Settings;
@@ -28,6 +29,9 @@ public class SettingsModule : IModule
         services.AddSingleton<IThemeManager, SimplifiedThemeManager>();
         services.AddSingleton<ICredentialSafe, CredentialSafe>();
         services.AddScoped<IConnectionStringBuilder, PostgresConnectionStringBuilder>();
+
+        services.AddScoped<IDirectoryAccess, DirectoryAccess>();
+        services.AddScoped<IFolderBrowser, FolderBrowser>();
     }
 
     public void RegisterNavigation(INavigationRegistry registry)
