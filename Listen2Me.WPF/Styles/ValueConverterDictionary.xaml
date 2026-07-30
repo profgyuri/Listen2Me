@@ -8,4 +8,5 @@
     <wpf:BoolNegatorConverter x:Key="BoolNegatorConverter"/>
     <wpf:BoolToItalicConverter x:Key="BoolToItalicConverter"/>
     <wpf:BoolToBoldConverter x:Key="BoolToBoldConverter"/>
+    <wpf:BookmarkableVisibilityConverter x:Key="BookmarkableVisibilityConverter"/>
 </ResourceDictionary>

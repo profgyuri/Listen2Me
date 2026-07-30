@@ -75,4 +75,32 @@ public partial class FolderBrowserListContainer : UserControl
             typeof(ICommand),
             typeof(FolderBrowserListContainer));
     #endregion
+
+    #region IsBookmarkable property
+    public static readonly DependencyProperty IsBookmarkableProperty = DependencyProperty.Register(
+        nameof(IsBookmarkable), 
+        typeof(bool), 
+        typeof(FolderBrowserListContainer), 
+        new PropertyMetadata(false));
+
+    public bool IsBookmarkable
+    {
+        get => (bool)GetValue(IsBookmarkableProperty);
+        set => SetValue(IsBookmarkableProperty, value);
+    }
+    #endregion
+
+    #region AddBookmarkCommand property
+    public static readonly DependencyProperty AddBookmarkCommandProperty = DependencyProperty.Register(
+        nameof(AddBookmarkCommand), 
+        typeof(ICommand), 
+        typeof(FolderBrowserListContainer), 
+        new PropertyMetadata(default(ICommand)));
+
+    public ICommand AddBookmarkCommand
+    {
+        get => (ICommand)GetValue(AddBookmarkCommandProperty);
+        set => SetValue(AddBookmarkCommandProperty, value);
+    }
+    #endregion
 }

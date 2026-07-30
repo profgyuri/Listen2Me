@@ -147,3 +147,24 @@ public class BoolToBoldConverter : IValueConverter
         return boolValue ? FontWeights.Normal : FontWeights.Bold;
     }
 }
+
+/// <summary>
+/// Convert true to visible and false to collapsed, except for "..".
+/// </summary>
+public class BookmarkableVisibilityConverter : IMultiValueConverter
+{
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (values.Length != 2 || values[0] is not bool isBookmarkable || values[1] is not string item)
+            return Visibility.Collapsed;
+
+        return isBookmarkable && item != ".." 
+            ? Visibility.Visible 
+            : Visibility.Collapsed;
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
+    }
+}

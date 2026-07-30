@@ -3,10 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:shells="clr-namespace:Listen2Me.MVVM.ViewModels.Shells;assembly=Listen2Me.MVVM"
+        xmlns:shellVms="clr-namespace:Listen2Me.MVVM.ViewModels.Shells;assembly=Listen2Me.MVVM"
         xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
+        xmlns:entities="clr-namespace:Listen2Me.MVVM.Persistence.Entities;assembly=Listen2Me.MVVM"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:shells="clr-namespace:Listen2Me.WPF.Views.Shells"
+        xmlns:dragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance shells:FolderBrowserDialogViewModel}"
+        d:DataContext="{d:DesignInstance shellVms:FolderBrowserDialogViewModel}"
         WindowStyle="None"
         Background="{DynamicResource Brush.Background.Primary}"
         Foreground="{DynamicResource Brush.Foreground.Primary}"
@@ -23,19 +27,55 @@
                                                Header="Drives:"
                                                ItemsSource="{Binding Drives}"
                                                SelectedItem="{Binding SelectedDrive}"
-                                               ItemDoubleClickCommand="{Binding NavigateToCommand}"/>
+                                               ItemDoubleClickCommand="{Binding NavigateToCommand}"
+                                               IsBookmarkable="False"/>
         
-        <components:FolderBrowserListContainer Grid.Column="0" Grid.Row="2"
-                                               Header="Bookmarks:"
-                                               ItemsSource="{Binding Bookmarks}"
-                                               SelectedItem="{Binding SelectedBookmark}"/>
+        <Border Grid.Column="0" Grid.Row="2" Padding="8 4" Margin="8"
+                Background="{StaticResource Brush.Background.Secondary.Light}" CornerRadius="8">
+            <Grid RowDefinitions="Auto, *">
+                <TextBlock Grid.Row="0" Text="Bookmarks:"/>
+                <ListView Grid.Row="1" Margin="0 8 0 0" SelectionMode="Single"
+                          ItemsSource="{Binding Bookmarks}"
+                          SelectedItem="{Binding SelectedBookmark}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          dragDrop:DragDrop.IsDropTarget="True"
+                          dragDrop:DragDrop.DropHandler="{Binding}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_OnMouseDoubleClick"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type entities:Bookmark}">
+                            <Grid ColumnDefinitions="Auto, *">
+                                <TextBlock Text="{Binding Path=DisplayName}" Grid.Column="0" Grid.Row="0"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <Button Grid.Column="1" Grid.Row="0" 
+                                        Style="{StaticResource FolderBrowserListItemButton}"
+                                        HorizontalAlignment="Right"
+                                        Content="{materialDesign:PackIcon Kind=Minus}"
+                                        ToolTip="Remove Bookmark"
+                                        Command="{Binding DataContext.RemoveBookmarkCommand,
+                                                RelativeSource={RelativeSource AncestorType={x:Type shells:FolderBrowserDialog}}}"
+                                        CommandParameter="{Binding}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Border>
         
         <Grid Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" RowDefinitions="*, Auto" ColumnDefinitions="*, Auto, Auto">
             <components:FolderBrowserListContainer Grid.ColumnSpan="3" 
                                                    Header="Folders:"
                                                    ItemsSource="{Binding Folders}"
                                                    SelectedItem="{Binding SelectedFolder}"
-                                                   ItemDoubleClickCommand="{Binding NavigateToChildCommand}"/>
+                                                   ItemDoubleClickCommand="{Binding NavigateToChildCommand}"
+                                                   IsBookmarkable="True"
+                                                   AddBookmarkCommand="{Binding AddBookmarkCommand}"
+                                                   dragDrop:DragDrop.IsDragSource="True"/>
             <Button Grid.Row="2" Grid.Column="1" Margin="8 0 4 8" Width="120"
                     Content="Select"
                     Click="SelectButton_OnClick"/>
