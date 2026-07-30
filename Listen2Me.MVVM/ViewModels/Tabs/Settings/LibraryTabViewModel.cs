@@ -17,7 +17,8 @@ public partial class LibraryTabViewModel : ViewModelBase
     private readonly LibrarySettings _settings;
     private readonly IDialogManager _dialogManager;
     
-    [ObservableProperty] private ObservableCollection<MusicFolder> _musicFolders;
+    [ObservableProperty] private ObservableCollection<MusicFolder> _musicFolders = new();
+    [ObservableProperty] private ObservableCollection<MusicFolder> _selectedMusicFolders = new();
     
     private Dictionary<string, Action> _settingsSyncMap;
     
@@ -36,6 +37,8 @@ public partial class LibraryTabViewModel : ViewModelBase
             [nameof(MusicFolders)] = () => _settings.MusicFolders = MusicFolders,
         };
         
+        MusicFolders = new ObservableCollection<MusicFolder>(_settings.MusicFolders);
+        
         await base.InitializeAsync(cancellationToken);
     }
 
@@ -52,6 +55,17 @@ public partial class LibraryTabViewModel : ViewModelBase
             LastWrite = DateTime.Now
         };
         MusicFolders.Add(folder);
+        OnPropertyChanged(nameof(MusicFolders));
+    }
+
+    [RelayCommand]
+    private void RemoveSelected()
+    {
+        foreach (var selectedMusicFolder in SelectedMusicFolders)
+        {
+            MusicFolders.Remove(selectedMusicFolder);
+        }
+        OnPropertyChanged(nameof(MusicFolders));
     }
 
     protected override async void OnPropertyChanged(PropertyChangedEventArgs e)

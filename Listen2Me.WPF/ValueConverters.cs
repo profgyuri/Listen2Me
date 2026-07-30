@@ -41,6 +41,23 @@ public class BoolToVisibilityConverter : IValueConverter
 }
 
 /// <summary>
+/// Convert true to collapsed and false to visible.
+/// </summary>
+public class NegativeBoolToVisibilityConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is not bool boolValue)
+            throw new InvalidOperationException("Value must be a boolean.");
+        
+        return boolValue ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) 
+        => throw new NotImplementedException();
+}
+
+/// <summary>
 /// Convert ConnectionState to color.
 /// </summary>
 public class DbConnectionStateToBrushConverter : IValueConverter

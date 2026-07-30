@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Serilog;
 
 namespace Listen2Me.MVVM.System.Browsing;
 
@@ -51,11 +50,7 @@ public class FolderBrowser : IFolderBrowser
                 result.AddRange(directories);
                 return result;
             }
-            catch (UnauthorizedAccessException)
-            {
-                return [];
-            }
-            catch (IOException)
+            catch (Exception ex) when (ex is DirectoryNotFoundException or UnauthorizedAccessException or IOException)
             {
                 return [];
             }

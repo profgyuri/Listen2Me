@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -65,5 +66,19 @@ public partial class FolderBrowserDialogViewModel : DialogViewModelBase<string>
             _folderBrowser.NavigateToChild(path);
             await ActualizeSubFolders();
         }, "Navigate to child command");   
+    }
+
+    [RelayCommand]
+    private void Select()
+    {
+        Result = string.IsNullOrEmpty(SelectedFolder) 
+            ? _folderBrowser.CurrentPath 
+            : Path.Combine(_folderBrowser.CurrentPath, SelectedFolder);
+    }
+
+    [RelayCommand]
+    private void Cancel()
+    {
+        Result = null;
     }
 }

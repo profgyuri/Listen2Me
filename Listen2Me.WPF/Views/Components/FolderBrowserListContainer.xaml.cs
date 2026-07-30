@@ -50,7 +50,8 @@ public partial class FolderBrowserListContainer : UserControl
         DependencyProperty.RegisterAttached(
             "SelectedItem",
             typeof(string),
-            typeof(FolderBrowserListContainer));
+            typeof(FolderBrowserListContainer), 
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
     #endregion
 
     #region ItemDoubleClickCommand property and handler

@@ -7,25 +7,41 @@
         xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance shells:FolderBrowserDialogViewModel}"
+        WindowStyle="None"
         Background="{DynamicResource Brush.Background.Primary}"
         Foreground="{DynamicResource Brush.Foreground.Primary}"
         Title="FolderBrowserDialog" Height="450" Width="800">
-    <Grid ColumnDefinitions="150, *" RowDefinitions="*, *">
-        <components:FolderBrowserListContainer Grid.Column="0" Grid.Row="0"
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome x:Name="WindowChrome" CaptionHeight="32" />
+    </WindowChrome.WindowChrome>
+    
+    <Grid ColumnDefinitions="150, *" RowDefinitions="32, *, *">
+        <components:TitleBar Grid.Row="0" Grid.ColumnSpan="2" HideButtons="True"/>
+        
+        <components:FolderBrowserListContainer Grid.Column="0" Grid.Row="1"
                                                Header="Drives:"
                                                ItemsSource="{Binding Drives}"
                                                SelectedItem="{Binding SelectedDrive}"
                                                ItemDoubleClickCommand="{Binding NavigateToCommand}"/>
         
-        <components:FolderBrowserListContainer Grid.Column="0" Grid.Row="1"
+        <components:FolderBrowserListContainer Grid.Column="0" Grid.Row="2"
                                                Header="Bookmarks:"
                                                ItemsSource="{Binding Bookmarks}"
                                                SelectedItem="{Binding SelectedBookmark}"/>
         
-        <components:FolderBrowserListContainer Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
-                                               Header="Folders:"
-                                               ItemsSource="{Binding Folders}"
-                                               SelectedItem="{Binding SelectedFolder}"
-                                               ItemDoubleClickCommand="{Binding NavigateToChildCommand}"/>
+        <Grid Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" RowDefinitions="*, Auto" ColumnDefinitions="*, Auto, Auto">
+            <components:FolderBrowserListContainer Grid.ColumnSpan="3" 
+                                                   Header="Folders:"
+                                                   ItemsSource="{Binding Folders}"
+                                                   SelectedItem="{Binding SelectedFolder}"
+                                                   ItemDoubleClickCommand="{Binding NavigateToChildCommand}"/>
+            <Button Grid.Row="2" Grid.Column="1" Margin="8 0 4 8" Width="120"
+                    Content="Select"
+                    Click="SelectButton_OnClick"/>
+            <Button Grid.Row="2" Grid.Column="2" Margin="4 0 8 8" Width="120"
+                    Content="Cancel"
+                    Click="CancelButton_OnClick"/>
+        </Grid>
     </Grid>
 </Window>

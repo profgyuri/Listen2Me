@@ -10,14 +10,18 @@ public partial class FolderBrowserDialog : Window
         InitializeComponent();
         DataContext = vm;
     }
-    
-    private void OnCancel(object sender, RoutedEventArgs e)
-    {
-        DialogResult = false;
-    }
-    
-    private void OnOk(object sender, RoutedEventArgs e)
+
+    private void SelectButton_OnClick(object sender, RoutedEventArgs e)
     {
         DialogResult = true;
+        ((FolderBrowserDialogViewModel)DataContext).SelectCommand.Execute(null);
+        Close();
+    }
+
+    private void CancelButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        DialogResult = false;
+        ((FolderBrowserDialogViewModel)DataContext).CancelCommand.Execute(null);
+        Close();
     }
 }

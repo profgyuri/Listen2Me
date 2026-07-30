@@ -3,6 +3,7 @@
                     xmlns:wpf="clr-namespace:Listen2Me.WPF">
     <wpf:PathComparer x:Key="PathComparer"/>
     <wpf:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <wpf:NegativeBoolToVisibilityConverter x:Key="NegativeBoolToVisibilityConverter"/>
     <wpf:DbConnectionStateToBrushConverter x:Key="DbConnectionStateToBrushConverter"/>
     <wpf:BoolNegatorConverter x:Key="BoolNegatorConverter"/>
     <wpf:BoolToItalicConverter x:Key="BoolToItalicConverter"/>
