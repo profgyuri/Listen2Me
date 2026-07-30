@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
              mc:Ignorable="d"
              Background="{DynamicResource Brush.Background.Primary.Light}"
              d:DesignWidth="500">
@@ -51,7 +52,10 @@
             <StackPanel Grid.Column="2"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right"
-                        VerticalAlignment="Center">
+                        VerticalAlignment="Center"
+                        Visibility="{Binding HideButtons,
+                            RelativeSource={RelativeSource AncestorType={x:Type components:TitleBar}},
+                            Converter={StaticResource NegativeBoolToVisibilityConverter}}">
 
                 <Button Content="{materialDesign:PackIcon Kind=WindowMinimize,Size=15}"
                         Command="{Binding DataContext.MinimizeCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Listen2Me.MVVM.ErrorHandling;
+using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Persistence.Entities;
 using Listen2Me.MVVM.Settings.Library;
 using Listen2Me.MVVM.ViewModels.Tabs.Settings;
@@ -25,8 +26,9 @@ public class LibraryTabViewModelTests
         _settings = new Mock<LibrarySettings>();
         _settings.Setup(x => x.SaveAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         _settings.Setup(x => x.LoadAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        var dialogManager = new Mock<IDialogManager>();
         
-        _sut = new LibraryTabViewModel(errorHandler.Object, logger.Object, messenger.Object, _settings.Object);
+        _sut = new LibraryTabViewModel(errorHandler.Object, logger.Object, messenger.Object, _settings.Object, dialogManager.Object);
         await _sut.EnsureInitializedAsync().ConfigureAwait(false);
         _sut.MusicFolders = new ObservableCollection<MusicFolder>();
     }

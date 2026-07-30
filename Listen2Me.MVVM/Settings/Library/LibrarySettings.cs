@@ -8,6 +8,8 @@ namespace Listen2Me.MVVM.Settings.Library;
 public class LibrarySettings : JsonSettingsMemory
 {
     public IEnumerable<MusicFolder> MusicFolders { get; set; } = new List<MusicFolder>();
+
+    public IEnumerable<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
     
     protected override string FileName => "library.json";
 }

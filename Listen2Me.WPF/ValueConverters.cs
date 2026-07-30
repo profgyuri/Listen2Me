@@ -41,6 +41,23 @@ public class BoolToVisibilityConverter : IValueConverter
 }
 
 /// <summary>
+/// Convert true to collapsed and false to visible.
+/// </summary>
+public class NegativeBoolToVisibilityConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is not bool boolValue)
+            throw new InvalidOperationException("Value must be a boolean.");
+        
+        return boolValue ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) 
+        => throw new NotImplementedException();
+}
+
+/// <summary>
 /// Convert ConnectionState to color.
 /// </summary>
 public class DbConnectionStateToBrushConverter : IValueConverter
@@ -128,5 +145,26 @@ public class BoolToBoldConverter : IValueConverter
         if (value is not bool boolValue)
             throw new InvalidOperationException("Value must be a boolean.");
         return boolValue ? FontWeights.Normal : FontWeights.Bold;
+    }
+}
+
+/// <summary>
+/// Convert true to visible and false to collapsed, except for "..".
+/// </summary>
+public class BookmarkableVisibilityConverter : IMultiValueConverter
+{
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (values.Length != 2 || values[0] is not bool isBookmarkable || values[1] is not string item)
+            return Visibility.Collapsed;
+
+        return isBookmarkable && item != ".." 
+            ? Visibility.Visible 
+            : Visibility.Collapsed;
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
     }
 }

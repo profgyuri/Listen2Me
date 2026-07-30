@@ -3,12 +3,12 @@
 namespace Listen2Me.MVVM.Navigation;
 
 /// <inheritdoc/>
-public class ShellRegistry : IShellRegistry
+public class ViewRegistry : IViewRegistry
 {
     private readonly Dictionary<Type, Type> _map = new();
     
     /// <inheritdoc/>
-    public void Register<TShellViewModel, TShell>() where TShellViewModel : ShellViewModelBase where TShell : class
+    public void Register<TShellViewModel, TShell>() where TShellViewModel : class where TShell : class
     {
         if (!_map.TryAdd(typeof(TShellViewModel), typeof(TShell)))
         {
@@ -18,7 +18,7 @@ public class ShellRegistry : IShellRegistry
     }
 
     /// <inheritdoc/>
-    public Type Resolve<TShellViewModel>() where TShellViewModel : ShellViewModelBase
+    public Type Resolve<TShellViewModel>() where TShellViewModel : class
     {
         if (_map.TryGetValue(typeof(TShellViewModel), out var windowType))
             return windowType;

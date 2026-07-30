@@ -3,6 +3,7 @@ using Listen2Me.MVVM.Modules;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.ViewModels.Layouts;
 using Listen2Me.MVVM.ViewModels.Shells;
+using Listen2Me.WPF.Navigation;
 using Listen2Me.WPF.Views.Layouts;
 using Listen2Me.WPF.Views.Shells;
 
@@ -25,6 +26,10 @@ public sealed class MainShellModule : IModule
         
         services.AddSingleton<SettingsLayout>();
         services.AddSingleton<SettingsLayoutViewModel>();
+
+        services.AddSingleton<IDialogManager, DialogManager>();
+        services.AddSingleton<FolderBrowserDialogViewModel>();
+        services.AddSingleton<FolderBrowserDialog>();
     }
 
     /// <inheritdoc />
@@ -35,8 +40,9 @@ public sealed class MainShellModule : IModule
     }
 
     /// <inheritdoc />
-    public void RegisterShells(IShellRegistry registry)
+    public void RegisterViews(IViewRegistry registry)
     {
         registry.Register<MainShellViewModel, MainShell>();
+        registry.Register<FolderBrowserDialogViewModel, FolderBrowserDialog>();
     }
 }
