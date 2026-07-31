@@ -15,4 +15,6 @@ public static class Constants
         "Listen2Me", "Settings");
     
     public static string SqLiteConnectionString = "Data Source=Listen2Me.db";
+
+    public static string[] SupportedAudioExtensions = [".mp3", ".wav", ".flac", ".aiff", ".ogg", ".aac", ".m4a"];
 }

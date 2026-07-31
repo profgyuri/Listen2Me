@@ -5,15 +5,35 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:settingsTabVm="clr-namespace:Listen2Me.MVVM.ViewModels.Tabs.Settings;assembly=Listen2Me.MVVM"
              xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance settingsTabVm:LibraryTabViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
-    <Grid ColumnDefinitions="200, *" RowDefinitions="Auto, Auto, Auto, *">
-        <components:MusicFolders Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+    <Grid ColumnDefinitions="200, 100, *" RowDefinitions="Auto, Auto, Auto, *">
+        <components:MusicFolders Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 10"
                                  ItemSource="{Binding MusicFolders}"
                                  SelectedItems="{Binding SelectedMusicFolders}"
                                  AddFolderCommand="{Binding OpenFolderBrowserCommand}"
                                  RemoveFolderCommand="{Binding RemoveSelectedCommand}"/>
-        
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="Automatic Scanning:"/>
+        <ToggleButton Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left"
+                      IsChecked="{Binding ScanAutamatically}"/>
+        <Button Grid.Column="2" Grid.Row="1" Content="Scan Now" Command="{Binding ScanCommand}"/>
+        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3"
+              ColumnDefinitions="*, Auto">
+            <ProgressBar Padding="0" Height="16"
+                         Minimum="0" Maximum="100"
+                         Background="{StaticResource Brush.Accent.Light}"
+                         Foreground="{StaticResource Brush.Accent.Mid}"
+                         Value="{Binding ScanProgressPercentage}" Margin="16"
+                         ToolTip="{Binding ScanProgress}"/>
+            <Button Grid.Column="1"
+                    Background="Transparent" Foreground="Crimson" BorderBrush="Transparent"
+                    Content="{materialDesign:PackIcon Kind=Cancel}"
+                    Command="{Binding CancelScanCommand}"
+                    Width="16" Height="16" Padding="0" HorizontalContentAlignment="Center"
+                    IsEnabled="{Binding IsScanning}"
+                    ToolTip="Cancel Scanning Process"/>
+        </Grid>
     </Grid>
 </UserControl>

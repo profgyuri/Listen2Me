@@ -77,4 +77,22 @@ public sealed class SharedDataContext : ISharedDbContext
 
         return result;
     }
+
+    // <inheritdoc/>
+    public async Task MigrateAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            await _sqLiteDataContext.Database.MigrateAsync(ct);
+
+            if (_settings.Storage.PostgresStorage.UsePostgres)
+                await _postgresDataContextFactory.Create().Database.MigrateAsync(ct);
+            
+            _logger.Information("Database migrated");
+        }
+        catch (Exception e)
+        {
+            _logger.Error(e, "Failed to migrate database");
+        }
+    }
 }

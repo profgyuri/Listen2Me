@@ -4,6 +4,7 @@ using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Persistence.Entities;
 using Listen2Me.MVVM.Settings.Library;
+using Listen2Me.MVVM.System.Metadata;
 using Listen2Me.MVVM.ViewModels.Tabs.Settings;
 using Moq;
 using Serilog;
@@ -27,8 +28,9 @@ public class LibraryTabViewModelTests
         _settings.Setup(x => x.SaveAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         _settings.Setup(x => x.LoadAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         var dialogManager = new Mock<IDialogManager>();
+        var metadataReader = new Mock<IAudioFolderScanner>();
         
-        _sut = new LibraryTabViewModel(errorHandler.Object, logger.Object, messenger.Object, _settings.Object, dialogManager.Object);
+        _sut = new LibraryTabViewModel(errorHandler.Object, logger.Object, messenger.Object, _settings.Object, dialogManager.Object, metadataReader.Object);
         await _sut.EnsureInitializedAsync().ConfigureAwait(false);
         _sut.MusicFolders = new ObservableCollection<MusicFolder>();
     }
