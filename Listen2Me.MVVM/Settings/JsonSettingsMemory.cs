@@ -17,7 +17,7 @@ public abstract class JsonSettingsMemory : ObservableObject, ISettingsMemory
     private readonly SemaphoreSlim _loadLock = new(1, 1);
     
     /// <inheritdoc/>
-    public async Task SaveAsync(CancellationToken ct = default)
+    public virtual async Task SaveAsync(CancellationToken ct = default)
     {
         await _saveLock.WaitAsync(ct);
         try
@@ -35,7 +35,7 @@ public abstract class JsonSettingsMemory : ObservableObject, ISettingsMemory
     }
 
     /// <inheritdoc/>
-    public async Task LoadAsync(CancellationToken ct = default)
+    public virtual async Task LoadAsync(CancellationToken ct = default)
     {
         await _loadLock.WaitAsync(ct);
         try

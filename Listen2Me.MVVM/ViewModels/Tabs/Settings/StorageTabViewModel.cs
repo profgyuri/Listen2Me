@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Persistence;
-using Listen2Me.MVVM.Settings;
 using Listen2Me.MVVM.Settings.Storage;
 using Listen2Me.MVVM.Settings.Storage.Credentials;
 using Npgsql;
@@ -12,9 +11,8 @@ using Serilog;
 
 namespace Listen2Me.MVVM.ViewModels.Tabs.Settings;
 
-public partial class StorageTabViewModel : ViewModelBase
+public partial class StorageTabViewModel : SyncableSettingsViewModel<StorageSettings>
 {
-    private readonly ISettings _settings;
     private readonly ICredentialSafe _credentialSafe;
     private readonly IConnectionStringBuilder _connectionStringBuilder;
 
@@ -24,11 +22,10 @@ public partial class StorageTabViewModel : ViewModelBase
     
     public bool IsSaveButtonEnabled => ConnectionState == ConnectionState.Open;
     
-    public StorageTabViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, ISettings settings, 
+    public StorageTabViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, StorageSettings settings, 
         ICredentialSafe credentialSafe, IConnectionStringBuilder connectionStringBuilder) 
-        : base(errorHandler, logger, messenger)
+        : base(errorHandler, logger, messenger, settings)
     {
-        _settings = settings;
         _credentialSafe = credentialSafe;
         _connectionStringBuilder = connectionStringBuilder;
     }
@@ -36,8 +33,8 @@ public partial class StorageTabViewModel : ViewModelBase
     /// <inheritdoc />
     public override async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        await _settings.Storage.LoadAsync(cancellationToken);
-        Postgres = _settings.Storage.PostgresStorage ?? new PostgresStorageSettings();
+        await Settings.LoadAsync(cancellationToken);
+        Postgres = Settings.PostgresStorage ?? new PostgresStorageSettings();
     }
 
     [RelayCommand]
@@ -72,9 +69,9 @@ public partial class StorageTabViewModel : ViewModelBase
         }
         
         var encryptedPassword = _credentialSafe.Encrypt(password);
-        _settings.Storage.PostgresStorage = Postgres with { EncryptedPassword = encryptedPassword };
+        Settings.PostgresStorage = Postgres with { EncryptedPassword = encryptedPassword };
         
-        await _settings.Storage.SaveAsync();
+        await Settings.SaveAsync();
         Logger.Information("Postgres settings saved.");
     }
 }

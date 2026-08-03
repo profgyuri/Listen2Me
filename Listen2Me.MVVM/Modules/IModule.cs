@@ -29,5 +29,5 @@ public interface IModule
     /// Registers module shells.
     /// </summary>
     /// <param name="registry"></param>
-    void RegisterShells(IShellRegistry registry);
+    void RegisterViews(IViewRegistry registry);
 }

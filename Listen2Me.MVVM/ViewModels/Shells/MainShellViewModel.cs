@@ -31,8 +31,6 @@ public partial class MainShellViewModel : ShellViewModelBase
     /// <inheritdoc />
     public override async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        await _settings.LoadAsync(cancellationToken).ConfigureAwait(false);
-        
         var accent = _settings.Appearance.Accent;
         var theme = _settings.Appearance.Theme;
         _settings.Appearance.ThemeManager.SetAccent(accent);

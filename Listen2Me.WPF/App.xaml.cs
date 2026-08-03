@@ -11,6 +11,8 @@ using Serilog;
 using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Modules;
 using Listen2Me.MVVM.Navigation;
+using Listen2Me.MVVM.Persistence;
+using Listen2Me.MVVM.Settings;
 using Listen2Me.MVVM.Threading;
 using Listen2Me.MVVM.ViewModels.Shells;
 using Listen2Me.WPF.Navigation;
@@ -50,6 +52,14 @@ public partial class App
         try
         {
             _host = CreateHostBuilder().Build();
+            
+            var settings = _host.Services.GetRequiredService<ISettings>();
+            await settings.LoadAsync(CancellationToken.None);
+            
+            using var scope = _host.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ISharedDbContext>();
+            await dbContext.MigrateAsync();
+            
             await _host.StartAsync().ConfigureAwait(true);
 
             RegisterNavigation(_host.Services);
@@ -110,7 +120,7 @@ public partial class App
                 services.AddSingleton<IInitializationTracker, InitializationTracker>();
                 services.AddScoped<INavigationService, NavigationService>();
                 services.AddSingleton<IShellManager, ShellManager>();
-                services.AddSingleton<IShellRegistry, ShellRegistry>();
+                services.AddSingleton<IViewRegistry, ViewRegistry>();
                 services.AddSingleton<IErrorHandler, LoggingErrorHandler>();
                 services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
                 services.AddSingleton<ILogger>(_ => Log.Logger);
@@ -132,12 +142,12 @@ public partial class App
     {
         var moduleCatalog = services.GetRequiredService<IModuleCatalog>();
         var navigationRegistry = services.GetRequiredService<INavigationRegistry>();
-        var shellRegistry = services.GetRequiredService<IShellRegistry>();
+        var shellRegistry = services.GetRequiredService<IViewRegistry>();
 
         foreach (var module in moduleCatalog.LoadModules())
         {
             module.RegisterNavigation(navigationRegistry);
-            module.RegisterShells(shellRegistry);
+            module.RegisterViews(shellRegistry);
         }
     }
 

@@ -28,6 +28,6 @@ public class WidgetsModule : IModule
     public void RegisterNavigation(INavigationRegistry registry)
     { }
 
-    public void RegisterShells(IShellRegistry registry)
+    public void RegisterViews(IViewRegistry registry)
     { }
 }

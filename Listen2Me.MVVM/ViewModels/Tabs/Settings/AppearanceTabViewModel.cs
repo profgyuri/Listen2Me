@@ -11,10 +11,8 @@ using Serilog;
 
 namespace Listen2Me.MVVM.ViewModels.Tabs.Settings;
 
-public partial class AppearanceTabViewModel : ViewModelBase
+public partial class AppearanceTabViewModel : SyncableSettingsViewModel<AppearanceSettings>
 {
-    private readonly AppearanceSettings _settings;
-    
     [ObservableProperty] private FontFamily _selectedFontFamily;
     [ObservableProperty] private double _selectedFontSize;
     [ObservableProperty] private IEnumerable<double> _fontSizes;
@@ -26,40 +24,33 @@ public partial class AppearanceTabViewModel : ViewModelBase
     [ObservableProperty] private Accents _selectedAccentColor;
     [ObservableProperty] private bool _isGridEditable;
     
-    private Dictionary<string, Action> _settingsSyncMap;
-    
     public AppearanceTabViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
         AppearanceSettings settings) 
-        : base(errorHandler, logger, messenger)
-    {
-        _settings = settings;
-    }
+        : base(errorHandler, logger, messenger, settings)
+    { }
 
     public override async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        _settingsSyncMap = new Dictionary<string, Action>
-        {
-            [nameof(IsBold)] = () => _settings.IsBold = IsBold,
-            [nameof(IsItalic)] = () => _settings.IsItalic = IsItalic,
-            [nameof(SelectedFontSize)] = () => _settings.FontSize = SelectedFontSize,
-            [nameof(SelectedAccentColor)] = () => _settings.Accent = SelectedAccentColor,
-            [nameof(SelectedTheme)] = () => _settings.Theme = SelectedTheme,
-            [nameof(SelectedFontFamily)] = () => _settings.FontFamily = SelectedFontFamily,
-        };
+        SyncProperty(nameof(IsBold), () => Settings.IsBold = IsBold);
+        SyncProperty(nameof(IsItalic), () => Settings.IsItalic = IsItalic);
+        SyncProperty(nameof(SelectedFontSize), () => Settings.FontSize = SelectedFontSize);
+        SyncProperty(nameof(SelectedAccentColor), () => Settings.Accent = SelectedAccentColor);
+        SyncProperty(nameof(SelectedTheme), () => Settings.Theme = SelectedTheme);
+        SyncProperty(nameof(SelectedFontFamily), () => Settings.FontFamily = SelectedFontFamily);
         
-        SelectedFontFamily = _settings.FontFamily;
+        SelectedFontFamily = Settings.FontFamily;
         FontSizes = [10, 11, 12, 13, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40];
-        SelectedFontSize = _settings.FontSize;
-        IsBold = _settings.IsBold;
-        IsItalic = _settings.IsItalic;
+        SelectedFontSize = Settings.FontSize;
+        IsBold = Settings.IsBold;
+        IsItalic = Settings.IsItalic;
         
         Themes = new ObservableCollection<Themes>(Enum.GetValues<Themes>());
-        SelectedTheme = _settings.Theme;
+        SelectedTheme = Settings.Theme;
         
         AccentColors = new ObservableCollection<Accents>(Enum.GetValues<Accents>());
-        SelectedAccentColor = _settings.Accent;
+        SelectedAccentColor = Settings.Accent;
         
-        IsGridEditable = _settings.IsGridEditable;
+        IsGridEditable = Settings.IsGridEditable;
         
         await base.InitializeAsync(cancellationToken);
     }
@@ -68,22 +59,16 @@ public partial class AppearanceTabViewModel : ViewModelBase
     {
         await ExecuteSafeAsync(async ct =>
         {
-            _settings.IsGridEditable = value;
-            await _settings.SaveAsync(ct);
+            Settings.IsGridEditable = value;
+            await Settings.SaveAsync(ct);
             Messenger.Send<IsGridEditableChangedMessage>();
         }, "Change grid editable");
     }
 
-    // We use this to save the settings when no custom interaction is needed
-    protected override async void OnPropertyChanged(PropertyChangedEventArgs e)
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
 
-        if (e is not { PropertyName: { Length: > 0 } } || !IsInitialized) return;
-        if (!_settingsSyncMap.TryGetValue(e.PropertyName, out var setValue)) return;
-        
-        setValue();
-        await ExecuteSafeAsync(async ct => await _settings.SaveAsync(ct), "Save appearance settings");
         Messenger.Send<FontSettingsChangedMessage>();
     }
 }
