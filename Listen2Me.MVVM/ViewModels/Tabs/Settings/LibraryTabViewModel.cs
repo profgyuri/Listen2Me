@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -14,9 +13,8 @@ using Serilog;
 
 namespace Listen2Me.MVVM.ViewModels.Tabs.Settings;
 
-public partial class LibraryTabViewModel : ViewModelBase
+public partial class LibraryTabViewModel : SyncableSettingsViewModel<LibrarySettings>
 {
-    private readonly LibrarySettings _settings;
     private readonly IDialogManager _dialogManager;
     private readonly IServiceScopeFactory _scopeFactory;
     
@@ -27,28 +25,23 @@ public partial class LibraryTabViewModel : ViewModelBase
     [ObservableProperty] private int _scanProgressPercentage;
     [ObservableProperty] private string _scanProgress = "Scanning has not started yet";
     
-    private Dictionary<string, Action> _settingsSyncMap;
     private CancellationTokenSource? _scanCts;
     
     public LibraryTabViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
         LibrarySettings settings, IDialogManager dialogManager, IServiceScopeFactory scopeFactory) 
-        : base(errorHandler, logger, messenger)
+        : base(errorHandler, logger, messenger, settings)
     {
-        _settings = settings;
         _dialogManager = dialogManager;
         _scopeFactory = scopeFactory;
     }
 
     public override async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        _settingsSyncMap = new Dictionary<string, Action>()
-        {
-            [nameof(MusicFolders)] = () => _settings.MusicFolders = MusicFolders,
-            [nameof(ScanAutomatically)] = () => _settings.ScanAutomatically = ScanAutomatically,
-        };
+        SyncProperty(nameof(MusicFolders), () => Settings.MusicFolders = MusicFolders);
+        SyncProperty(nameof(ScanAutomatically), () => Settings.ScanAutomatically = ScanAutomatically);
         
-        MusicFolders = new ObservableCollection<MusicFolder>(_settings.MusicFolders);
-        ScanAutomatically = _settings.ScanAutomatically;
+        MusicFolders = new ObservableCollection<MusicFolder>(Settings.MusicFolders);
+        ScanAutomatically = Settings.ScanAutomatically;
         
         await base.InitializeAsync(cancellationToken);
     }
@@ -120,16 +113,5 @@ public partial class LibraryTabViewModel : ViewModelBase
         _scanCts = null;
         
         IsScanning = false;
-    }
-
-    protected override async void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        base.OnPropertyChanged(e);
-
-        if (e is not { PropertyName: { Length: > 0 } } || !IsInitialized) return;
-        if (!_settingsSyncMap.TryGetValue(e.PropertyName, out var setValue)) return;
-        
-        setValue();
-        await ExecuteSafeAsync(async ct => await _settings.SaveAsync(ct), "Save library settings");
     }
 }
