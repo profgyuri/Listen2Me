@@ -12,6 +12,7 @@ using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Modules;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Persistence;
+using Listen2Me.MVVM.Settings;
 using Listen2Me.MVVM.Threading;
 using Listen2Me.MVVM.ViewModels.Shells;
 using Listen2Me.WPF.Navigation;
@@ -51,6 +52,9 @@ public partial class App
         try
         {
             _host = CreateHostBuilder().Build();
+            
+            var settings = _host.Services.GetRequiredService<ISettings>();
+            await settings.LoadAsync(CancellationToken.None);
             
             using var scope = _host.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<ISharedDbContext>();

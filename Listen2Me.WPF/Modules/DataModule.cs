@@ -23,8 +23,6 @@ public class DataModule : IModule
 
         services.AddScoped<IAudioFolderScanner, AudioFolderScanner>();
         services.AddScoped<IMetadataReader, MetadataReader>();
-
-        services.AddSingleton<IHostedService, PostgresSyncReconciliationService>();
     }
 
     public void RegisterNavigation(INavigationRegistry registry)
