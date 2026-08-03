@@ -1,6 +1,7 @@
 ﻿using Listen2Me.MVVM.Modules;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Persistence;
+using Listen2Me.MVVM.Persistence.DataContextHelpers;
 using Listen2Me.MVVM.Persistence.Syncing;
 using Listen2Me.MVVM.System.Metadata;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +19,9 @@ public class DataModule : IModule
         services.AddScoped<PostgresContextFactory>();
         services.AddScoped<ISharedDbContext, SharedDataContext>();
         services.AddScoped<ISyncService, SyncService>();
+        services.AddScoped<IScanResultProcessor, ScanResultProcessor>();
 
-        services.AddScoped<IAudioFolderScanner, ParallelAudioFolderScanner>();
+        services.AddScoped<IAudioFolderScanner, AudioFolderScanner>();
         services.AddScoped<IMetadataReader, MetadataReader>();
 
         services.AddSingleton<IHostedService, PostgresSyncReconciliationService>();

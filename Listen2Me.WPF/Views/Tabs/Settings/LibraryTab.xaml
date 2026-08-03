@@ -17,7 +17,7 @@
                                  RemoveFolderCommand="{Binding RemoveSelectedCommand}"/>
         <TextBlock Grid.Column="0" Grid.Row="1" Text="Automatic Scanning:"/>
         <ToggleButton Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left"
-                      IsChecked="{Binding ScanAutamatically}"/>
+                      IsChecked="{Binding ScanAutomatically}"/>
         <Button Grid.Column="2" Grid.Row="1" Content="Scan Now" Command="{Binding ScanCommand}"/>
         <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3"
               ColumnDefinitions="*, Auto">

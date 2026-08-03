@@ -9,6 +9,7 @@ using Listen2Me.MVVM.Persistence.Entities;
 using Listen2Me.MVVM.Settings.Library;
 using Listen2Me.MVVM.System.Metadata;
 using Listen2Me.MVVM.ViewModels.Shells;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace Listen2Me.MVVM.ViewModels.Tabs.Settings;
@@ -17,11 +18,11 @@ public partial class LibraryTabViewModel : ViewModelBase
 {
     private readonly LibrarySettings _settings;
     private readonly IDialogManager _dialogManager;
-    private readonly IAudioFolderScanner _audioFolderScanner;
+    private readonly IServiceScopeFactory _scopeFactory;
     
     [ObservableProperty] private ObservableCollection<MusicFolder> _musicFolders = new();
     [ObservableProperty] private ObservableCollection<MusicFolder> _selectedMusicFolders = new();
-    [ObservableProperty] private bool _scanAutamatically;
+    [ObservableProperty] private bool _scanAutomatically;
     [ObservableProperty] private bool _isScanning;
     [ObservableProperty] private int _scanProgressPercentage;
     [ObservableProperty] private string _scanProgress = "Scanning has not started yet";
@@ -30,12 +31,12 @@ public partial class LibraryTabViewModel : ViewModelBase
     private CancellationTokenSource? _scanCts;
     
     public LibraryTabViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
-        LibrarySettings settings, IDialogManager dialogManager, IAudioFolderScanner audioFolderScanner) 
+        LibrarySettings settings, IDialogManager dialogManager, IServiceScopeFactory scopeFactory) 
         : base(errorHandler, logger, messenger)
     {
         _settings = settings;
         _dialogManager = dialogManager;
-        _audioFolderScanner = audioFolderScanner;
+        _scopeFactory = scopeFactory;
     }
 
     public override async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -43,9 +44,11 @@ public partial class LibraryTabViewModel : ViewModelBase
         _settingsSyncMap = new Dictionary<string, Action>()
         {
             [nameof(MusicFolders)] = () => _settings.MusicFolders = MusicFolders,
+            [nameof(ScanAutomatically)] = () => _settings.ScanAutomatically = ScanAutomatically,
         };
         
         MusicFolders = new ObservableCollection<MusicFolder>(_settings.MusicFolders);
+        ScanAutomatically = _settings.ScanAutomatically;
         
         await base.InitializeAsync(cancellationToken);
     }
@@ -94,10 +97,9 @@ public partial class LibraryTabViewModel : ViewModelBase
         
         try
         {
-            foreach (var musicFolder in MusicFolders)
-            {
-                await _audioFolderScanner.ScanFolderAsync(musicFolder.Path, progressReporter, _scanCts.Token);
-            }
+            using var scope = _scopeFactory.CreateScope();
+            var audioFolderScanner = scope.ServiceProvider.GetRequiredService<IAudioFolderScanner>();
+            await audioFolderScanner.ScanFoldersAsync(progressReporter, _scanCts.Token);
             ScanProgress = "Scan completed";
         }
         catch (OperationCanceledException e)
@@ -118,7 +120,6 @@ public partial class LibraryTabViewModel : ViewModelBase
         _scanCts = null;
         
         IsScanning = false;
-        Logger.Information("Scan cancelled by user");
     }
 
     protected override async void OnPropertyChanged(PropertyChangedEventArgs e)

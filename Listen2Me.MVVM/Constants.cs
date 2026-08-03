@@ -14,7 +14,8 @@ public static class Constants
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "Listen2Me", "Settings");
     
-    public static string SqLiteConnectionString = "Data Source=Listen2Me.db";
+    public static readonly string SqLiteConnectionString =
+        $"Data Source={Environment.ExpandEnvironmentVariables(@"%AppData%\Listen2Me\Listen2Me.db")}";
 
     public static string[] SupportedAudioExtensions = [".mp3", ".wav", ".flac", ".aiff", ".ogg", ".aac", ".m4a"];
 }

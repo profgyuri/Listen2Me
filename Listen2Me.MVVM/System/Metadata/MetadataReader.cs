@@ -10,15 +10,15 @@ public class MetadataReader : IMetadataReader
     /// <inheritdoc/>
     public Song Read(string path)
     {
-        // PictureLazy is used to avoid reading an unnecessary big data chunk from the file.
-        using var file = TagLib.File.Create(path, ReadStyle.PictureLazy);
+        // PictureLazy mode doesn't load the Properties property.
+        using var file = TagLib.File.Create(path, ReadStyle.Average | ReadStyle.PictureLazy);
         var fileInfo = new FileInfo(path);
         
         // Serato's analyzer uses floating point numbers for BPM, which confuses TagLib's parser.
         // This is a workaround to get the correct BPM.
         // example: 150.000 => 150000 gets fixed to 150.
         var bpm = file.Tag.BeatsPerMinute;
-        while (bpm > 999)
+        while (bpm > 499)
         {
             bpm /= 10;
         }

@@ -9,6 +9,8 @@ namespace Listen2Me.MVVM.Persistence;
 /// </summary>
 public interface ISharedDbContext
 {
+    public Guid Id { get; set; }
+    
     public DbSet<Song> Songs { get; }
     
     /// <inheritdoc cref="Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(CancellationToken)"/>

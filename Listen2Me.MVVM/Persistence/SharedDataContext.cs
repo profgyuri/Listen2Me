@@ -11,6 +11,8 @@ namespace Listen2Me.MVVM.Persistence;
 
 public sealed class SharedDataContext : ISharedDbContext
 {
+    public Guid Id { get; set; } = Guid.NewGuid();
+
     private readonly SqLiteDataContext _sqLiteDataContext;
     private readonly PostgresContextFactory _postgresDataContextFactory;
     private readonly ISettings _settings;
@@ -43,10 +45,11 @@ public sealed class SharedDataContext : ISharedDbContext
     public DbSet<Song> Songs => _sqLiteDataContext.Songs;
     #endregion
     
+    // <inheritdoc cref="IDbContext.SaveChangesAsync"/>
     public async Task<int> SaveChangesAsync(CancellationToken ct = default)
     {
         // Save to postgres only, if explicitly set so
-        await using var postgresContext = _settings.Storage.PostgresStorage.UsePostgres
+        await using var postgresContext = _settings.Storage.PostgresStorage?.UsePostgres == true
             ? _postgresDataContextFactory.Create()
             : null;
 
@@ -78,14 +81,15 @@ public sealed class SharedDataContext : ISharedDbContext
         return result;
     }
 
-    // <inheritdoc/>
+    // <inheritdoc cref="IDbContext.MigrateAsync"/>
     public async Task MigrateAsync(CancellationToken ct = default)
     {
         try
         {
+            _logger.Information("SQLite path: {Path}", _sqLiteDataContext.Database.GetDbConnection().ConnectionString);
             await _sqLiteDataContext.Database.MigrateAsync(ct);
 
-            if (_settings.Storage.PostgresStorage.UsePostgres)
+            if (_settings.Storage.PostgresStorage?.UsePostgres == true)
                 await _postgresDataContextFactory.Create().Database.MigrateAsync(ct);
             
             _logger.Information("Database migrated");

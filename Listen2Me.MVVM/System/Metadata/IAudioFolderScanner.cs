@@ -8,11 +8,10 @@ namespace Listen2Me.MVVM.System.Metadata;
 public interface IAudioFolderScanner
 {
     /// <summary>
-    /// Scans a folder for metadata.
+    /// Scans all music folders for metadata.
     /// </summary>
-    /// <param name="path">The folder that contains supported media files.</param>
     /// <param name="progressReporter">Progress reporter reporting the percentage as an integer.</param>
     /// <param name="ct">Cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task ScanFolderAsync(string path, IProgress<int> progressReporter, CancellationToken ct);
+    Task ScanFoldersAsync(IProgress<int> progressReporter, CancellationToken ct);
 }
