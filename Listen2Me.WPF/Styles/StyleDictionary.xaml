@@ -3,6 +3,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Styles/NavBarStyles.xaml"/>
         <ResourceDictionary Source="/Styles/FolderBrowserStyles.xaml"/>
+        <ResourceDictionary Source="/Styles/TagEditorStyles.xaml"/>
         <ResourceDictionary Source="/Styles/GlobalDefaults.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

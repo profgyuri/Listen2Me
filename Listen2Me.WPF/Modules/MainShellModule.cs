@@ -26,6 +26,9 @@ public sealed class MainShellModule : IModule
         
         services.AddSingleton<SettingsLayout>();
         services.AddSingleton<SettingsLayoutViewModel>();
+        
+        services.AddSingleton<TagEditorLayout>();
+        services.AddSingleton<TagEditorLayoutViewModel>();
 
         services.AddSingleton<IDialogManager, DialogManager>();
         services.AddSingleton<FolderBrowserDialogViewModel>();
@@ -37,6 +40,7 @@ public sealed class MainShellModule : IModule
     {
         registry.Register<MainLayoutViewModel>("home");
         registry.Register<SettingsLayoutViewModel>("settings");
+        registry.Register<TagEditorLayoutViewModel>("tag-editor");
     }
 
     /// <inheritdoc />

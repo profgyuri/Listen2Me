@@ -42,6 +42,9 @@
                     <components:NavBarItem Icon="MusicNote" Text="Player"
                                            IsActive="{Binding CurrentRoute, Converter={StaticResource PathComparer}, ConverterParameter=home}"
                                            Command="{Binding NavigateCommand}" CommandParameter="home"/>
+                    <components:NavBarItem Icon="TagEdit" Text="Tag Editor" 
+                                           IsActive="{Binding CurrentRoute, Converter={StaticResource PathComparer}, ConverterParameter=tag-editor}"
+                                           Command="{Binding NavigateCommand}" CommandParameter="tag-editor"/>
                     <components:NavBarItem Icon="Gear" Text="Settings" 
                                            IsActive="{Binding CurrentRoute, Converter={StaticResource PathComparer}, ConverterParameter=settings}"
                                            Command="{Binding NavigateCommand}" CommandParameter="settings"/>
