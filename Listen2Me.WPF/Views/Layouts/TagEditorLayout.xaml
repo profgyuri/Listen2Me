@@ -3,10 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Listen2Me.WPF.Views.Layouts"
+             xmlns:layouts="clr-namespace:Listen2Me.MVVM.ViewModels.Layouts;assembly=Listen2Me.MVVM"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <TextBlock>Tag Editor</TextBlock>
+             d:DataContext="{d:DesignInstance layouts:TagEditorLayoutViewModel}"
+             d:DesignHeight="300" d:DesignWidth="500">
+    <Grid RowDefinitions="Auto, *, Auto">
+        <ToolBarTray Grid.Row="0"
+                     Background="{DynamicResource Brush.Background.Primary}">
+            <ToolBar Style="{StaticResource MaterialDesignToolBar}" 
+                     Background="{DynamicResource Brush.Background.Primary}">
+                <Button Content="{materialDesign:PackIcon Kind=DatabaseAdd, Size=16}" ToolTip="Add Songs from the Database"/>
+                <Button Content="{materialDesign:PackIcon Kind=FolderAdd, Size=16}" ToolTip="Add Songs from a Folder"/>
+                <Button Content="{materialDesign:PackIcon Kind=Clear, Size=16}" ToolTip="Clear All Items from the Grid"/>
+                <Button Content="Move..." ToolTip="Move selected files to a different folder."/>
+            </ToolBar>
+        </ToolBarTray>
+        <DataGrid Grid.Row="1" Style="{StaticResource TagEditorDataGrid}"
+                  ItemsSource="{Binding Songs}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
+                <DataGridTextColumn Header="Artist" Binding="{Binding Artist}"/>
+                <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
+                <DataGridTextColumn Header="Genre" Binding="{Binding Genre}"/>
+                <DataGridTextColumn Header="BPM" Binding="{Binding Bpm}"/>
+                <DataGridTextColumn Header="Bitrate" Binding="{Binding Bitrate}"/>
+                <DataGridTextColumn Header="Length" Binding="{Binding Length}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Size" Binding="{Binding LengthBytes}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Last Write" Binding="{Binding LastWrite}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBox Grid.Row="2" materialDesign:HintAssist.Hint="Filter"/>
     </Grid>
 </UserControl>
