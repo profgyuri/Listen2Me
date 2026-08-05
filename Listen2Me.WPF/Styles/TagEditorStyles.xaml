@@ -15,6 +15,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    
     <Style x:Key="TagEditorDataGrid" TargetType="DataGrid">
         <Setter Property="Background" Value="{DynamicResource Brush.Background.Primary}"/>
         <Setter Property="Foreground" Value="{DynamicResource Brush.Foreground.Primary}"/>
@@ -23,5 +24,8 @@
         <Setter Property="CanUserReorderColumns" Value="False"/>
         <Setter Property="CanUserSortColumns" Value="True"/>
         <Setter Property="CanUserResizeRows" Value="False"/>
+        <Setter Property="SelectionMode" Value="Extended"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
     </Style>
 </ResourceDictionary>
