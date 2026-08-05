@@ -14,4 +14,12 @@ public interface IAudioFolderScanner
     /// <param name="ct">Cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task ScanFoldersAsync(IProgress<int> progressReporter, CancellationToken ct);
+    
+    /// <summary>
+    /// Scans a single folder for metadata. Does not save to the database.
+    /// </summary>
+    /// <param name="path">The path to the folder.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The list of songs found in the folder.</returns>
+    Task<List<Song>> ScanFolderAsync(string path, CancellationToken ct = default);
 }
