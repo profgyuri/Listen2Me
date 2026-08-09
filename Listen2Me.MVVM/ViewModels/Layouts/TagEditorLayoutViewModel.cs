@@ -11,6 +11,7 @@ using Listen2Me.MVVM.Extensions;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Persistence;
 using Listen2Me.MVVM.Persistence.Entities;
+using Listen2Me.MVVM.Settings;
 using Listen2Me.MVVM.System.Metadata;
 using Listen2Me.MVVM.ViewModels.Shells;
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +21,14 @@ namespace Listen2Me.MVVM.ViewModels.Layouts;
 
 public partial class TagEditorLayoutViewModel : ViewModelBase
 {
+    private readonly HashSet<Song> _subscribedSongs = new();
+    
     private readonly ISharedDbContext _dbContext;
     private readonly IDialogManager _dialogManager;
     private readonly IAudioFolderScanner _folderScanner;
     private readonly IMetadataWriter _metadataWriter;
+    private readonly IMetadataReader _metadataReader;
+    private readonly ISettings _settings;
 
     [ObservableProperty] private ICollectionView _songView;
     [ObservableProperty] private ObservableCollection<Song> _songs = new();
@@ -32,13 +37,15 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     
     public TagEditorLayoutViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
         ISharedDbContext dbContext, IDialogManager dialogManager, IAudioFolderScanner folderScanner, 
-        IMetadataWriter metadataWriter) 
+        IMetadataWriter metadataWriter, IMetadataReader metadataReader, ISettings settings) 
         : base(errorHandler, logger, messenger)
     {
         _dbContext = dbContext;
         _dialogManager = dialogManager;
         _folderScanner = folderScanner;
         _metadataWriter = metadataWriter;
+        _metadataReader = metadataReader;
+        _settings = settings;
     }
 
     public override Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -52,6 +59,56 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
 
         
         return base.InitializeAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Handles dropped paths, files and folders alike.
+    /// </summary>
+    /// <param name="paths"></param>
+    public async Task HandleDroppedPaths(string[] paths)
+    {
+        foreach (var path in paths)
+        {
+            try
+            {
+                if (File.Exists(path) && 
+                    Constants.SupportedAudioExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
+                {
+                    var toAdd = await _dbContext.Songs.FirstOrDefaultAsync(s => s.Path == path);
+                    if (toAdd is null)
+                    {
+                        toAdd = _metadataReader.Read(path);
+                    }
+                    
+                    if (!Songs.Contains(toAdd))
+                        Songs.Add(toAdd);
+                }
+                else if (Directory.Exists(path))
+                {
+                    List<Song> toAdd;
+                    if (_settings.Library.MusicFolders.Any(x => x.Path.Equals(path, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        toAdd = await _dbContext.Songs.Where(s => 
+                                EF.Functions.Like(s.Path, path + "%")).ToListAsync();
+                    }
+                    else
+                    {
+                        toAdd = await _folderScanner.ScanFolderAsync(path);
+                    }
+
+                    toAdd = toAdd.Except(Songs).ToList();
+                    Songs.AddRange(toAdd);
+                }
+                else
+                {
+                    Logger.Warning("Dropped path {Path} is not supported", path);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Failed to handle dropped path {Path}", path);
+            }
+        }
     }
 
     #region Commands
@@ -135,29 +192,48 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         SongView = CollectionViewSource.GetDefaultView(value);
     }
 
-    private void Song_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private async void Song_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        var song = (Song)sender!;
-        Logger.Information("Tag Editor: Song {0} changed", song.Path);
-        
-        if (_dbContext.Songs.Contains(song))
+        try
         {
-            _dbContext.Songs.Update(song);
-            _dbContext.SaveChangesAsync();
+            var song = (Song)sender!;
+            Logger.Information("Tag Editor: Song {0} changed", song.Path);
+
+            var isTracked = _dbContext.Songs.Entry(song).State != EntityState.Detached;
+            if (isTracked)
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+
+            await _metadataWriter.UpdateTags(song);
         }
-        
-        _metadataWriter.UpdateTags(song);
+        catch (Exception ex)
+        {
+            Logger.Error(ex, "Tag Editor: Failed to update song tags");
+        }
     }
 
     private void Songs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         Logger.Debug("Tag Editor: Songs collection changed");
+        
+        // This is the branched out case for the Reset event after the collection is cleared.
+        if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            foreach (var song in _subscribedSongs)
+                song.PropertyChanged -= Song_PropertyChanged;
+            _subscribedSongs.Clear();
+
+            return;
+        }
+        
         if (e.OldItems is not null)
         {
             Logger.Debug("Tag Editor: Old items count: {0}", e.OldItems.Count);
             foreach (Song song in e.OldItems)
             {
                 song.PropertyChanged -= Song_PropertyChanged;
+                _subscribedSongs.Remove(song);
             }
         }
         
@@ -167,6 +243,7 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
             foreach (Song song in e.NewItems)
             {
                 song.PropertyChanged += Song_PropertyChanged;
+                _subscribedSongs.Add(song);
             }
         }
     }

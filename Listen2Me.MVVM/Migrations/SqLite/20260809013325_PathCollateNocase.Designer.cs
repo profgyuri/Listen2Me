@@ -3,6 +3,7 @@ using System;
 using Listen2Me.MVVM.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Listen2Me.MVVM.Migrations.SqLite
 {
     [DbContext(typeof(SqLiteDataContext))]
-    partial class SqLiteDataContextModelSnapshot : ModelSnapshot
+    [Migration("20260809013325_PathCollateNocase")]
+    partial class PathCollateNocase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.8");

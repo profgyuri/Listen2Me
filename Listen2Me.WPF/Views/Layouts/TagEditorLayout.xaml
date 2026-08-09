@@ -25,7 +25,11 @@
         </ToolBarTray>
         <DataGrid Grid.Row="1" Style="{StaticResource TagEditorDataGrid}"
                   ItemsSource="{Binding SongView}"
-                  SelectionChanged="SongGrid_OnSelectionChanged">
+                  SelectionChanged="SongGrid_OnSelectionChanged"
+                  AllowDrop="True"
+                  DragEnter="DataGrid_OnDragEnter"
+                  DragOver="DataGrid_OnDragOver"
+                  Drop="DataGrid_OnDrop">
             <DataGrid.Resources>
                 <!-- These style settings only work here 🙃-->
                 <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
