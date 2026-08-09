@@ -15,7 +15,7 @@ public partial class TagEditorLayout : UserControl
     private void SongGrid_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var vm = (TagEditorLayoutViewModel)DataContext;
-        vm.SelectedSongs.AddRange(e.AddedItems.Cast<Song>());
-        vm.SelectedSongs.RemoveRange(e.RemovedItems.Cast<Song>());
+        vm.SelectedSongs?.AddRange(e.AddedItems.Cast<Song>());
+        vm.SelectedSongs?.RemoveRange(e.RemovedItems.Cast<Song>());
     }
 }
