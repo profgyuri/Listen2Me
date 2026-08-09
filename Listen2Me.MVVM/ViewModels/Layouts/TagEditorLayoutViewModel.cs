@@ -12,6 +12,7 @@ using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Persistence;
 using Listen2Me.MVVM.Persistence.Entities;
 using Listen2Me.MVVM.Settings;
+using Listen2Me.MVVM.System;
 using Listen2Me.MVVM.System.Metadata;
 using Listen2Me.MVVM.ViewModels.Shells;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,7 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     private readonly IMetadataWriter _metadataWriter;
     private readonly IMetadataReader _metadataReader;
     private readonly ISettings _settings;
+    private readonly IFileRenamer _fileRenamer;
 
     [ObservableProperty] private ICollectionView _songView;
     [ObservableProperty] private ObservableCollection<Song> _songs = new();
@@ -37,7 +39,7 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     
     public TagEditorLayoutViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
         ISharedDbContext dbContext, IDialogManager dialogManager, IAudioFolderScanner folderScanner, 
-        IMetadataWriter metadataWriter, IMetadataReader metadataReader, ISettings settings) 
+        IMetadataWriter metadataWriter, IMetadataReader metadataReader, ISettings settings, IFileRenamer fileRenamer) 
         : base(errorHandler, logger, messenger)
     {
         _dbContext = dbContext;
@@ -46,6 +48,7 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         _metadataWriter = metadataWriter;
         _metadataReader = metadataReader;
         _settings = settings;
+        _fileRenamer = fileRenamer;
     }
 
     public override Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -192,12 +195,27 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         SongView = CollectionViewSource.GetDefaultView(value);
     }
 
+    private readonly SemaphoreSlim _propertyChangedLock = new(1, 1);
+    
     private async void Song_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        var song = (Song)sender!;
+        var locked = false;
         try
         {
-            var song = (Song)sender!;
+            locked = await _propertyChangedLock.WaitAsync(TimeSpan.FromSeconds(1));
+            if (!locked)
+            {
+                Logger.Warning("Tag Editor: Timed out waiting for lock on {0}", song.Path);
+                return;
+            }
+
             Logger.Information("Tag Editor: Song {0} changed", song.Path);
+
+            if (e.PropertyName?.Equals(nameof(Song.Path)) == true)
+            {
+                if (!_fileRenamer.Rename(song)) return;
+            }
 
             var isTracked = _dbContext.Songs.Entry(song).State != EntityState.Detached;
             if (isTracked)
@@ -210,6 +228,10 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         catch (Exception ex)
         {
             Logger.Error(ex, "Tag Editor: Failed to update song tags");
+        }
+        finally
+        {
+            if (locked) _propertyChangedLock.Release();
         }
     }
 

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Listen2Me.MVVM.Persistence.Syncing;
 
@@ -19,6 +21,19 @@ public partial class Song(
     [NotMapped] public string Display => 
         string.IsNullOrWhiteSpace(Artist) || string.IsNullOrWhiteSpace(Title) ? Path : $"{Artist} - {Title}";
 
+    [NotMapped] public string FileName
+    {
+        get => global::System.IO.Path.GetFileName(Path);
+        set
+        {
+            OnPropertyChanging();
+            var oldDirectory = global::System.IO.Path.GetDirectoryName(Path)!;
+            var newPath = global::System.IO.Path.Combine(oldDirectory, value);
+            Path = newPath;
+            OnPropertyChanged();
+        }
+    }
+
     [ObservableProperty] private Guid _id = Id;
     [ObservableProperty] private string _artist = Artist;
     [ObservableProperty] private string _title = Title;
@@ -29,6 +44,14 @@ public partial class Song(
     [ObservableProperty] private string _path = Path;
     [ObservableProperty] private long _lengthBytes = LengthBytes;
     [ObservableProperty] private DateTime _lastWrite = LastWrite;
+    
+    [NotMapped] public bool SuppressNotifications { get; set; }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        if (SuppressNotifications) return;
+        base.OnPropertyChanged(e);
+    }
 
     /// <summary>
     /// Maps the properties of the other song to this one.

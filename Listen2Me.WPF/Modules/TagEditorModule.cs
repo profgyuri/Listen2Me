@@ -1,5 +1,6 @@
 ﻿using Listen2Me.MVVM.Modules;
 using Listen2Me.MVVM.Navigation;
+using Listen2Me.MVVM.System;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Listen2Me.WPF.Modules;
@@ -10,7 +11,7 @@ public class TagEditorModule : IModule
     
     public void RegisterServices(IServiceCollection services)
     {
-        
+        services.AddScoped<IFileRenamer, FileRenamer>();
     }
 
     public void RegisterNavigation(INavigationRegistry registry)

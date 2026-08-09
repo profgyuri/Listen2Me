@@ -42,7 +42,7 @@
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Path" Binding="{Binding Path}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="File Name" Binding="{Binding FileName}"/>
                 <DataGridTextColumn Header="Artist" Binding="{Binding Artist}"/>
                 <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
                 <DataGridTextColumn Header="Genre" Binding="{Binding Genre}"/>
@@ -51,6 +51,7 @@
                 <DataGridTextColumn Header="Length" Binding="{Binding Length, StringFormat={}{0:mm\\:ss\\.fff}}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Size" Binding="{Binding LengthBytes}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Last Write" Binding="{Binding LastWrite}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Path" Binding="{Binding Path}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
         <TextBox Grid.Row="2" materialDesign:HintAssist.Hint="Filter"
