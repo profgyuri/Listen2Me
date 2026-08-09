@@ -23,7 +23,7 @@
                         Command="{Binding MoveFilesCommand}"/>
             </ToolBar>
         </ToolBarTray>
-        <DataGrid x:Name="SongGrid" Grid.Row="1" Style="{StaticResource TagEditorDataGrid}"
+        <DataGrid Grid.Row="1" Style="{StaticResource TagEditorDataGrid}"
                   ItemsSource="{Binding SongView}"
                   SelectionChanged="SongGrid_OnSelectionChanged">
             <DataGrid.Resources>
@@ -38,13 +38,13 @@
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
+                <DataGridTextColumn Header="Path" Binding="{Binding Path}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Artist" Binding="{Binding Artist}"/>
                 <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
                 <DataGridTextColumn Header="Genre" Binding="{Binding Genre}"/>
                 <DataGridTextColumn Header="BPM" Binding="{Binding Bpm}"/>
                 <DataGridTextColumn Header="Bitrate" Binding="{Binding Bitrate}"/>
-                <DataGridTextColumn Header="Length" Binding="{Binding Length}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Length" Binding="{Binding Length, StringFormat={}{0:mm\\:ss\\.fff}}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Size" Binding="{Binding LengthBytes}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Last Write" Binding="{Binding LastWrite}" IsReadOnly="True"/>
             </DataGrid.Columns>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Data;
@@ -22,7 +23,7 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     private readonly ISharedDbContext _dbContext;
     private readonly IDialogManager _dialogManager;
     private readonly IAudioFolderScanner _folderScanner;
-
+    private readonly IMetadataWriter _metadataWriter;
 
     [ObservableProperty] private ICollectionView _songView;
     [ObservableProperty] private ObservableCollection<Song> _songs = new();
@@ -30,12 +31,14 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     [ObservableProperty] private string _filterText = string.Empty;
     
     public TagEditorLayoutViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
-        ISharedDbContext dbContext, IDialogManager dialogManager, IAudioFolderScanner folderScanner) 
+        ISharedDbContext dbContext, IDialogManager dialogManager, IAudioFolderScanner folderScanner, 
+        IMetadataWriter metadataWriter) 
         : base(errorHandler, logger, messenger)
     {
         _dbContext = dbContext;
         _dialogManager = dialogManager;
         _folderScanner = folderScanner;
+        _metadataWriter = metadataWriter;
     }
 
     public override Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -43,9 +46,16 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         SongView = CollectionViewSource.GetDefaultView(Songs);
         SongView.Filter = FilterSong;
         
+        Songs.CollectionChanged += Songs_CollectionChanged;
+        foreach (var s in Songs)
+            s.PropertyChanged += Song_PropertyChanged;
+
+        
         return base.InitializeAsync(cancellationToken);
     }
 
+    #region Commands
+    
     [RelayCommand]
     private async Task AddSongsFromDb()
     {
@@ -95,10 +105,73 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         await _dbContext.SaveChangesAsync();
     }
 
+    #endregion
+    
     partial void OnFilterTextChanged(string value)
     {
         SongView.Refresh();
     }
+
+    #region Tag Data change detection
+
+    partial void OnSongsChanging(ObservableCollection<Song>? oldValue, ObservableCollection<Song> newValue)
+    {
+        Logger.Information("Tag Editor: Songs changing");
+        if (oldValue is null) return;
+        
+        oldValue.CollectionChanged -= Songs_CollectionChanged;
+        foreach (var s in oldValue)
+            s.PropertyChanged -= Song_PropertyChanged;
+    }
+    
+    partial void OnSongsChanged(ObservableCollection<Song> value)
+    {
+        Logger.Information("Tag Editor: Songs changed");
+        value.CollectionChanged += Songs_CollectionChanged;
+        foreach (var s in value)
+            s.PropertyChanged += Song_PropertyChanged;
+
+        Logger.Debug("Tag Editor: Songs count: {0}", value.Count);
+        SongView = CollectionViewSource.GetDefaultView(value);
+    }
+
+    private void Song_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        var song = (Song)sender!;
+        Logger.Information("Tag Editor: Song {0} changed", song.Path);
+        
+        if (_dbContext.Songs.Contains(song))
+        {
+            _dbContext.Songs.Update(song);
+            _dbContext.SaveChangesAsync();
+        }
+        
+        _metadataWriter.UpdateTags(song);
+    }
+
+    private void Songs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        Logger.Debug("Tag Editor: Songs collection changed");
+        if (e.OldItems is not null)
+        {
+            Logger.Debug("Tag Editor: Old items count: {0}", e.OldItems.Count);
+            foreach (Song song in e.OldItems)
+            {
+                song.PropertyChanged -= Song_PropertyChanged;
+            }
+        }
+        
+        if (e.NewItems is not null)
+        {
+            Logger.Debug("Tag Editor: New items count: {0}", e.NewItems.Count);
+            foreach (Song song in e.NewItems)
+            {
+                song.PropertyChanged += Song_PropertyChanged;
+            }
+        }
+    }
+
+    #endregion
 
     private bool FilterSong(object obj)
     {
