@@ -48,4 +48,11 @@ public partial class Song(
 
         return this;
     }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Song other && Id == other.Id;
+    }
+
+    public override int GetHashCode() => Id.GetHashCode();
 }
