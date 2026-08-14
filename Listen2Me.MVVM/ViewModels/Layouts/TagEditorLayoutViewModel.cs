@@ -165,6 +165,28 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         await _dbContext.SaveChangesAsync();
     }
 
+    [RelayCommand]
+    private async Task FilenameToTags()
+    {
+        var result = await _dialogManager.ShowDialogAsync<TagEditorFormulaViewModel, bool>();
+
+        if (result)
+        {
+            // todo: apply formula to selected songs
+        }
+    }
+    
+    [RelayCommand]
+    private async Task TagsToFilename()
+    {
+        var result = await _dialogManager.ShowDialogAsync<TagEditorFormulaViewModel, bool>();
+
+        if (result)
+        {
+            // todo: rename all selected songs based on the formula
+        }
+    }
+
     #endregion
     
     partial void OnFilterTextChanged(string value)

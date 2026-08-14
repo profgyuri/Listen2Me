@@ -59,4 +59,12 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <PotentialEditorConfigFiles Remove="C:\Users\gyorg\.nuget\packages\materialdesignthemes\5.3.2\contentFiles\any\net10.0-windows7.0\Resources\Drawings\.editorconfig" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <GlobalAnalyzerConfigFiles Remove="C:\Users\gyorg\.nuget\packages\materialdesignthemes\5.3.2\contentFiles\any\net10.0-windows7.0\Resources\Drawings\.globalconfig" />
+    </ItemGroup>
+
 </Project>

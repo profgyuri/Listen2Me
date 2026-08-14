@@ -8,6 +8,13 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance layouts:TagEditorLayoutViewModel}"
              d:DesignHeight="300" d:DesignWidth="500">
+    <UserControl.Resources>
+        <Style x:Key="IconStyle" TargetType="materialDesign:PackIcon">
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    
     <Grid RowDefinitions="Auto, *, Auto">
         <ToolBarTray Grid.Row="0"
                      Background="{DynamicResource Brush.Background.Primary}">
@@ -19,6 +26,22 @@
                         Command="{Binding AddSongsFromFolderCommand}"/>
                 <Button Content="{materialDesign:PackIcon Kind=Clear, Size=16}" ToolTip="Clear All Items from the Grid"
                         Command="{Binding ClearGridCommand}"/>
+                <Button ToolTip="Generate tags from the file name" Padding="8"
+                        Command="{Binding FilenameToTagsCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FileOutline" Style="{StaticResource IconStyle}"/>
+                        <materialDesign:PackIcon Kind="ArrowRight" Style="{StaticResource IconStyle}" Height="12" Margin="-2 0 -4 0"/>
+                        <materialDesign:PackIcon Kind="MusicNote" Style="{StaticResource IconStyle}"/>
+                    </StackPanel>
+                </Button>
+                <Button ToolTip="Generate a file name from tags" Padding="8"
+                        Command="{Binding TagsToFilenameCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="MusicNote" Style="{StaticResource IconStyle}"/>
+                        <materialDesign:PackIcon Kind="ArrowRight" Style="{StaticResource IconStyle}" Height="12" Margin="-4 0 -2 0"/>
+                        <materialDesign:PackIcon Kind="FileOutline" Style="{StaticResource IconStyle}"/>
+                    </StackPanel>
+                </Button>
                 <Button Content="Move..." ToolTip="Move selected files to a different folder."
                         Command="{Binding MoveFilesCommand}"/>
             </ToolBar>
