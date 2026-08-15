@@ -7,7 +7,7 @@
         xmlns:components="clr-namespace:Listen2Me.WPF.Views.Components"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance shells:TagEditorFormulaViewModel}"
-        WindowStyle="None"
+        WindowStyle="None" WindowStartupLocation="CenterOwner"
         Background="{DynamicResource Brush.Background.Primary}"
         Foreground="{DynamicResource Brush.Foreground.Primary}"
         Title="TagEditorFormula" Height="232" Width="300">
@@ -25,14 +25,21 @@
                 <TextBlock Margin="10 0 0 0" Text="{Binding FileName}"/>
             </StackPanel>
         
-            <TextBox Grid.Row="1" Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                     Padding="4 2"
-                     Foreground="{DynamicResource Brush.Foreground.Primary}"
-                     BorderBrush="{DynamicResource Brush.Accent.Mid}"
-                     Text="{Binding Formula}"/>
+            <TextBox Grid.Row="1" Text="{Binding Formula}"/>
         
             <!-- This ItemsControl should contain the read tags if the formula for the first selected song is correct. -->
-            <ItemsControl Grid.Row="2" ItemsSource="{Binding ReadTags}"/>
+            <ItemsControl Grid.Row="2" ItemsSource="{Binding ReadTags}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="75, *">
+                            <Line Grid.Column="0" Grid.ColumnSpan="2" Fill="{DynamicResource Brush.Border.Primary}"/>
+                            <TextBlock Grid.Column="0" Text="{Binding Key}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Value}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Ok" Width="75" Margin="16 0"

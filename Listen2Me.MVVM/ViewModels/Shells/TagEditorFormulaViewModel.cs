@@ -2,19 +2,39 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Listen2Me.MVVM.ErrorHandling;
+using Listen2Me.MVVM.Messages;
+using Listen2Me.MVVM.Messages.Queuing;
+using Listen2Me.MVVM.Persistence.Entities;
 using Serilog;
 
 namespace Listen2Me.MVVM.ViewModels.Shells;
 
 public partial class TagEditorFormulaViewModel : DialogViewModelBase<bool>
 {
+    private readonly IMessageQueue _messageQueue;
+    
     [ObservableProperty] private string _fileName = string.Empty;
     [ObservableProperty] private string _formula = string.Empty;
     [ObservableProperty] private Dictionary<string, string> _readTags = new();
+
+    private Song _song;
     
-    public TagEditorFormulaViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger) 
+    public TagEditorFormulaViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
+        IMessageQueue messageQueue) 
         : base(errorHandler, logger, messenger)
     {
+        _messageQueue = messageQueue;
+    }
+
+    public override Task InitializeAsync(CancellationToken cancellationToken = default)
+    {
+        var message = _messageQueue.Dequeue<ForwardFirstSelectedSongMessage>();
+        if (message is null) throw new InvalidOperationException("No matching message found in the queue.");
+        
+        _song = message.Song;
+        FileName = _song.FileName;
+        
+        return base.InitializeAsync(cancellationToken);
     }
 
     [RelayCommand]
