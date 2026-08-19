@@ -25,7 +25,7 @@
                 <TextBlock Margin="10 0 0 0" Text="{Binding FileName}"/>
             </StackPanel>
         
-            <TextBox Grid.Row="1" Text="{Binding Formula}"/>
+            <TextBox Grid.Row="1" Text="{Binding Formula, UpdateSourceTrigger=PropertyChanged}"/>
         
             <!-- This ItemsControl should contain the read tags if the formula for the first selected song is correct. -->
             <ItemsControl Grid.Row="2" ItemsSource="{Binding ReadTags}"

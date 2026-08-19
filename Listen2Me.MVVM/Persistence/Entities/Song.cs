@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Listen2Me.MVVM.Persistence.Syncing;
 
@@ -23,7 +22,7 @@ public partial class Song(
 
     [NotMapped] public string FileName
     {
-        get => global::System.IO.Path.GetFileName(Path);
+        get => global::System.IO.Path.GetFileNameWithoutExtension(Path);
         set
         {
             OnPropertyChanging();

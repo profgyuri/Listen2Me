@@ -1,6 +1,7 @@
 ﻿using Listen2Me.MVVM.Modules;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.System;
+using Listen2Me.MVVM.TagEditor;
 using Listen2Me.MVVM.ViewModels.Layouts;
 using Listen2Me.MVVM.ViewModels.Shells;
 using Listen2Me.WPF.Views.Layouts;
@@ -16,6 +17,9 @@ public class TagEditorModule : IModule
     public void RegisterServices(IServiceCollection services)
     {
         services.AddScoped<IFileRenamer, FileRenamer>();
+        services.AddScoped<IFilenameToTagsParser, FilenameToTagsParser>();
+        services.AddScoped<IMaskMatcher, MaskMatcher>();
+        services.AddScoped<IMaskParser, MaskParser>();
 
         services.AddSingleton<TagEditorFormula>();
         services.AddSingleton<TagEditorFormulaViewModel>();
