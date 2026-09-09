@@ -18,6 +18,7 @@ public class TagEditorModule : IModule
     {
         services.AddScoped<IFileRenamer, FileRenamer>();
         services.AddScoped<IFilenameToTagsParser, FilenameToTagsParser>();
+        services.AddScoped<ITagsToFilenameParser, TagsToFilenameParser>();
         services.AddScoped<IMaskMatcher, MaskMatcher>();
         services.AddScoped<IMaskParser, MaskParser>();
 

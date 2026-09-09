@@ -174,6 +174,7 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     private async Task FilenameToTags()
     {
         _messageQueue.Enqueue(new ForwardFirstSelectedSongMessage(SelectedSongs[0]));
+        _messageQueue.Enqueue(new FormulaDialogTypeMessage(true));
         var result = _dialogManager.ShowDialogAsync<TagEditorFormulaViewModel, bool>();
 
         if (await result)
@@ -186,6 +187,7 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     private async Task TagsToFilename()
     {
         _messageQueue.Enqueue(new ForwardFirstSelectedSongMessage(SelectedSongs[0]));
+        _messageQueue.Enqueue(new FormulaDialogTypeMessage(false));
         var result = _dialogManager.ShowDialogAsync<TagEditorFormulaViewModel, bool>();
 
         if (await result)

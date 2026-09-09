@@ -27,7 +27,8 @@ public partial class Song(
         {
             OnPropertyChanging();
             var oldDirectory = global::System.IO.Path.GetDirectoryName(Path)!;
-            var newPath = global::System.IO.Path.Combine(oldDirectory, value);
+            var extension = global::System.IO.Path.GetExtension(Path);
+            var newPath = global::System.IO.Path.Combine(oldDirectory, value + extension);
             Path = newPath;
             OnPropertyChanged();
         }
