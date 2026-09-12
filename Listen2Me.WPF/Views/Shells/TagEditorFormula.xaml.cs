@@ -11,17 +11,17 @@ public partial class TagEditorFormula : Window
         DataContext = vm;
     }
 
-    private void OkButton_OnClick(object sender, RoutedEventArgs e)
+    private async void OkButton_OnClick(object sender, RoutedEventArgs e)
     {
+        await ((TagEditorFormulaViewModel)DataContext).OkCommand.ExecuteAsync(null);
         DialogResult = true;
-        ((TagEditorFormulaViewModel)DataContext).OkCommand.Execute(null);
         Close();
     }
     
-    private void CancelButton_OnClick(object sender, RoutedEventArgs e)
+    private async void CancelButton_OnClick(object sender, RoutedEventArgs e)
     {
-        DialogResult = true;
-        ((TagEditorFormulaViewModel)DataContext).CancelCommand.Execute(null);
+        await ((TagEditorFormulaViewModel)DataContext).CancelCommand.ExecuteAsync(null);
+        DialogResult = false;
         Close();
     }
 }

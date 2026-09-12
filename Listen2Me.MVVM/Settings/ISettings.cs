@@ -1,6 +1,7 @@
 ﻿using Listen2Me.MVVM.Settings.Appearance;
 using Listen2Me.MVVM.Settings.Library;
 using Listen2Me.MVVM.Settings.Storage;
+using Listen2Me.MVVM.Settings.TagEditor;
 
 namespace Listen2Me.MVVM.Settings;
 
@@ -17,6 +18,9 @@ public interface ISettings
     
     /// <inheritdoc cref="LibrarySettings"/>
     public LibrarySettings Library { get; set; }
+    
+    /// <inheritdoc cref="TagEditorSettings"/>
+    public TagEditorSettings TagEditor { get; set; }
     
     /// <summary>
     /// Saves all settings asynchronously.

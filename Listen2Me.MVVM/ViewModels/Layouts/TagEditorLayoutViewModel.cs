@@ -16,6 +16,7 @@ using Listen2Me.MVVM.Persistence.Entities;
 using Listen2Me.MVVM.Settings;
 using Listen2Me.MVVM.System;
 using Listen2Me.MVVM.System.Metadata;
+using Listen2Me.MVVM.TagEditor;
 using Listen2Me.MVVM.ViewModels.Shells;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -34,6 +35,8 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     private readonly ISettings _settings;
     private readonly IFileRenamer _fileRenamer;
     private readonly IMessageQueue _messageQueue;
+    private readonly IFilenameToTagsParser _filenameToTagsParser;
+    private readonly ITagsToFilenameParser _tagsToFilenameParser;
 
     [ObservableProperty] private ICollectionView _songView;
     [ObservableProperty] private ObservableCollection<Song> _songs = new();
@@ -43,7 +46,8 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     public TagEditorLayoutViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
         ISharedDbContext dbContext, IDialogManager dialogManager, IAudioFolderScanner folderScanner, 
         IMetadataWriter metadataWriter, IMetadataReader metadataReader, ISettings settings, IFileRenamer fileRenamer, 
-        IMessageQueue messageQueue) 
+        IMessageQueue messageQueue, IFilenameToTagsParser filenameToTagsParser, 
+        ITagsToFilenameParser tagsToFilenameParser) 
         : base(errorHandler, logger, messenger)
     {
         _dbContext = dbContext;
@@ -54,6 +58,8 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         _settings = settings;
         _fileRenamer = fileRenamer;
         _messageQueue = messageQueue;
+        _filenameToTagsParser = filenameToTagsParser;
+        _tagsToFilenameParser = tagsToFilenameParser;
     }
 
     public override Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -175,12 +181,24 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     {
         _messageQueue.Enqueue(new ForwardFirstSelectedSongMessage(SelectedSongs[0]));
         _messageQueue.Enqueue(new FormulaDialogTypeMessage(true));
+        
+        Logger.Debug("Showing formula dialog to extract tags from filename");
         var result = _dialogManager.ShowDialogAsync<TagEditorFormulaViewModel, bool>();
 
-        if (await result)
+        if (!await result)
         {
-            // todo: edit tags of selected songs based on the formula
+            Logger.Debug("Dialog returned false, aborting");
+            return;
         }
+        
+        Logger.Debug("Editing tags for {0} songs", SelectedSongs.Count);
+        foreach (var song in SelectedSongs)
+        {
+            var tags = _filenameToTagsParser.Parse(song.FileName, _settings.TagEditor.FilenameToTagsFormula);
+            song.MapFromDictionary(tags);
+        }
+        
+        Logger.Information("Tag Editor: Filename to tags completed for {0} songs", SelectedSongs.Count);
     }
     
     [RelayCommand]
@@ -190,9 +208,18 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         _messageQueue.Enqueue(new FormulaDialogTypeMessage(false));
         var result = _dialogManager.ShowDialogAsync<TagEditorFormulaViewModel, bool>();
 
-        if (await result)
+        if (!await result)
         {
-            // todo: rename all selected songs based on the formula
+            return;
+        }
+
+        foreach (var song in SelectedSongs)
+        {
+            var newFilename =
+                _tagsToFilenameParser.Generate(song.MapToDictionary(), _settings.TagEditor.TagsToFilenameFormula);
+            if (string.IsNullOrEmpty(newFilename)) continue;
+            
+            song.FileName = newFilename;
         }
     }
 

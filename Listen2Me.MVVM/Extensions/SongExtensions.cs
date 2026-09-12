@@ -27,5 +27,33 @@ public static class SongExtensions
             
             return dict;
         }
+        
+        public Song MapFromDictionary(IReadOnlyDictionary<string, string>? dict)
+        {
+            ArgumentNullException.ThrowIfNull(dict);
+            
+            dict.TryGetValue("artist", out var artist);
+            dict.TryGetValue("title", out var title);
+            dict.TryGetValue("genre", out var genre);
+            dict.TryGetValue("bpm", out var bpm);
+            dict.TryGetValue("bitrate", out var bitrate);
+            
+            if (!string.IsNullOrEmpty(artist))
+                song.Artist = artist;
+            
+            if (!string.IsNullOrEmpty(title))
+                song.Title = title;
+            
+            if (!string.IsNullOrEmpty(genre))
+                song.Genre = genre;
+            
+            if (!string.IsNullOrEmpty(bpm) && int.TryParse(bpm, out var bpmInt))
+                song.Bpm = bpmInt;
+            
+            if (!string.IsNullOrEmpty(bitrate) && int.TryParse(bitrate, out var bitrateInt))
+                song.Bitrate = bitrateInt;
+            
+            return song;
+        }
     }
 }
