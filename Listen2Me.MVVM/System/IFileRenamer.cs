@@ -10,7 +10,8 @@ public interface IFileRenamer
     /// <summary>
     /// Renames the file associated with the song.
     /// </summary>
-    /// <param name="song">The song to rename.</param>
+    /// <param name="song">The song to rename. Already contains the new path.</param>
+    /// <param name="oldPath">The old path of the file.</param>
     /// <returns>Whether the renaming was successful</returns>
-    bool Rename(Song song);
+    void Rename(Song song, string oldPath);
 }

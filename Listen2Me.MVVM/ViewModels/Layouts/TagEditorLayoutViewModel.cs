@@ -69,7 +69,10 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         
         Songs.CollectionChanged += Songs_CollectionChanged;
         foreach (var s in Songs)
+        {
             s.PropertyChanged += Song_PropertyChanged;
+            s.PropertyChanging += Song_PropertyChanging;
+        }
 
         
         return base.InitializeAsync(cancellationToken);
@@ -176,6 +179,8 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     [RelayCommand]
     private async Task FilenameToTags()
     {
+        if (SelectedSongs.Count == 0) return;
+        
         _messageQueue.Enqueue(new ForwardFirstSelectedSongMessage(SelectedSongs[0]));
         _messageQueue.Enqueue(new FormulaDialogTypeMessage(true));
         
@@ -201,6 +206,8 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     [RelayCommand]
     private async Task TagsToFilename()
     {
+        if (SelectedSongs.Count == 0) return;
+        
         _messageQueue.Enqueue(new ForwardFirstSelectedSongMessage(SelectedSongs[0]));
         _messageQueue.Enqueue(new FormulaDialogTypeMessage(false));
         var result = _dialogManager.ShowDialogAsync<TagEditorFormulaViewModel, bool>();
@@ -230,6 +237,14 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     #region Tag Data change detection
 
     private readonly SemaphoreSlim _propertyChangedLock = new(1, 1);
+    private readonly Dictionary<Guid, string> _pathChanges = new();
+    
+    private void Song_PropertyChanging(object? sender, PropertyChangingEventArgs e)
+    {
+        var song = (Song)sender!;
+        if (e.PropertyName?.Equals(nameof(Song.Path)) == true)
+            _pathChanges[song.Id] = song.Path;
+    }
     
     private async void Song_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -245,11 +260,28 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
             }
 
             Logger.Information("Tag Editor: Song {0} changed", song.Path);
+            
+            var returnEarly = false;
 
             if (e.PropertyName?.Equals(nameof(Song.Path)) == true)
             {
-                if (!_fileRenamer.Rename(song)) return;
+                try
+                {
+                    _fileRenamer.Rename(song, _pathChanges[song.Id]);
+                }
+                catch (Exception exception)
+                {
+                    Logger.Warning(exception, "Tag Editor: Failed to rename file {0} to {1}", 
+                        song.Path, _pathChanges[song.Id]);
+                    returnEarly = true;
+                }
+                finally
+                {
+                    _pathChanges.Remove(song.Id);   
+                }
             }
+            
+            if (returnEarly) return;
 
             await _metadataWriter.UpdateTags(song);
             
@@ -275,7 +307,10 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         if (e.Action == NotifyCollectionChangedAction.Reset)
         {
             foreach (var song in _subscribedSongs)
+            {
                 song.PropertyChanged -= Song_PropertyChanged;
+                song.PropertyChanging -= Song_PropertyChanging;
+            }
             _subscribedSongs.Clear();
 
             return;
@@ -286,19 +321,20 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
             foreach (Song song in e.OldItems)
             {
                 song.PropertyChanged -= Song_PropertyChanged;
+                song.PropertyChanging -= Song_PropertyChanging;
                 _subscribedSongs.Remove(song);
             }
         }
+
+        if (e.NewItems is null) return;
         
-        if (e.NewItems is not null)
+        foreach (Song song in e.NewItems)
         {
-            foreach (Song song in e.NewItems)
-            {
-                if (_subscribedSongs.Contains(song)) continue;
+            if (_subscribedSongs.Contains(song)) continue;
                 
-                song.PropertyChanged += Song_PropertyChanged;
-                _subscribedSongs.Add(song);
-            }
+            song.PropertyChanged += Song_PropertyChanged;
+            song.PropertyChanging += Song_PropertyChanging;
+            _subscribedSongs.Add(song);
         }
     }
 

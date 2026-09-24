@@ -19,18 +19,15 @@ public class FileRenamer : IFileRenamer
     }
 
     /// <inheritdoc/>
-    public bool Rename(Song song)
+    public void Rename(Song song, string oldPath)
     {
         var entry = _dbContext.Songs.Entry(song);
-        if (entry.State == EntityState.Detached) return true;
         
-        var oldPath = entry.Property(s => s.Path).OriginalValue;
-        if (string.Equals(oldPath, song.Path, StringComparison.Ordinal)) return false;
+        if (string.Equals(oldPath, song.Path, StringComparison.Ordinal)) throw new ArgumentException("Old path is the same as the new path.");
         
         try
         {
             File.Move(oldPath, song.Path);
-            return true;
         }
         catch (Exception e)
         {
@@ -45,7 +42,7 @@ public class FileRenamer : IFileRenamer
                 song.SuppressNotifications = false;
             }
             
-            return false;
+            throw;
         }
     }
 }
