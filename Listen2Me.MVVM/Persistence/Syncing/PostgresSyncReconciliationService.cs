@@ -52,7 +52,7 @@ public class PostgresSyncReconciliationService: IHostedService, IDisposable
         var syncService = scope.ServiceProvider.GetRequiredService<ISyncService>();
         var storageSettings = scope.ServiceProvider.GetRequiredService<StorageSettings>();
         
-        if (!storageSettings.PostgresStorage.UsePostgres) return;
+        if (storageSettings.PostgresStorage is not { UsePostgres: true }) return;
 
         try
         {

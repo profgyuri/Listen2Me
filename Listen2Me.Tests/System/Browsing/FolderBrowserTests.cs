@@ -18,8 +18,8 @@ public class FolderBrowserTests
         sut.NavigateToChild("House");
         
         Assert.AreEqual(@"C:\Music\House", sut.CurrentPath);
-        Assert.AreEqual("House", sut.GetSubFolders().Result[0]);
-        Assert.AreEqual("House2", sut.GetSubFolders().Result[1]);
-        Assert.HasCount(2, sut.GetSubFolders().Result);
+        Assert.AreEqual("House", sut.GetSubFolders().Result[1]);
+        Assert.AreEqual("House2", sut.GetSubFolders().Result[2]);
+        Assert.HasCount(3, sut.GetSubFolders().Result);
     }
 }

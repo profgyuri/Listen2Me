@@ -34,6 +34,11 @@ public abstract partial class ViewModelBase : ObservableObject, IInitializeAsync
         Logger = logger.ForContext(GetType());
         Messenger = messenger;
     }
+    
+    /// <summary>
+    /// Gets a unique identifier for this view model instance for logging and debugging.
+    /// </summary>
+    public Guid Id { get; } = Guid.NewGuid();
 
     /// <summary>
     /// Gets the messenger used for decoupled communication.
