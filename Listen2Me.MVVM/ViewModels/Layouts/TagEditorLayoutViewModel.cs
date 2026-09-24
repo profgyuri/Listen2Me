@@ -167,13 +167,10 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         {
             var fileName = Path.GetFileName(song.Path);
             var newPath = Path.Combine(path, fileName);
-            File.Move(song.Path, newPath);
-
+            
+            // the custom property changed event will trigger the file rename or move
             song.Path = newPath;
-            _dbContext.Songs.Update(song);
         }
-        
-        await _dbContext.SaveChangesAsync();
     }
 
     [RelayCommand]
@@ -232,27 +229,6 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
 
     #region Tag Data change detection
 
-    partial void OnSongsChanging(ObservableCollection<Song>? oldValue, ObservableCollection<Song> newValue)
-    {
-        Logger.Information("Tag Editor: Songs changing");
-        if (oldValue is null) return;
-        
-        oldValue.CollectionChanged -= Songs_CollectionChanged;
-        foreach (var s in oldValue)
-            s.PropertyChanged -= Song_PropertyChanged;
-    }
-    
-    partial void OnSongsChanged(ObservableCollection<Song> value)
-    {
-        Logger.Information("Tag Editor: Songs changed");
-        value.CollectionChanged += Songs_CollectionChanged;
-        foreach (var s in value)
-            s.PropertyChanged += Song_PropertyChanged;
-
-        Logger.Debug("Tag Editor: Songs count: {0}", value.Count);
-        SongView = CollectionViewSource.GetDefaultView(value);
-    }
-
     private readonly SemaphoreSlim _propertyChangedLock = new(1, 1);
     
     private async void Song_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -275,13 +251,13 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
                 if (!_fileRenamer.Rename(song)) return;
             }
 
+            await _metadataWriter.UpdateTags(song);
+            
             var isTracked = _dbContext.Songs.Entry(song).State != EntityState.Detached;
             if (isTracked)
             {
                 await _dbContext.SaveChangesAsync();
             }
-
-            await _metadataWriter.UpdateTags(song);
         }
         catch (Exception ex)
         {
@@ -295,8 +271,6 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
 
     private void Songs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        Logger.Debug("Tag Editor: Songs collection changed");
-        
         // This is the branched out case for the Reset event after the collection is cleared.
         if (e.Action == NotifyCollectionChangedAction.Reset)
         {
@@ -309,7 +283,6 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         
         if (e.OldItems is not null)
         {
-            Logger.Debug("Tag Editor: Old items count: {0}", e.OldItems.Count);
             foreach (Song song in e.OldItems)
             {
                 song.PropertyChanged -= Song_PropertyChanged;
@@ -319,9 +292,10 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
         
         if (e.NewItems is not null)
         {
-            Logger.Debug("Tag Editor: New items count: {0}", e.NewItems.Count);
             foreach (Song song in e.NewItems)
             {
+                if (_subscribedSongs.Contains(song)) continue;
+                
                 song.PropertyChanged += Song_PropertyChanged;
                 _subscribedSongs.Add(song);
             }
