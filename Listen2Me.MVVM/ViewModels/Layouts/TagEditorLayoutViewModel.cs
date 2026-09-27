@@ -1,22 +1,19 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.IO;
 using System.Windows.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Listen2Me.MVVM.Controllers;
 using Listen2Me.MVVM.ErrorHandling;
 using Listen2Me.MVVM.Extensions;
-using Listen2Me.MVVM.Messages;
-using Listen2Me.MVVM.Messages.Queuing;
 using Listen2Me.MVVM.Navigation;
 using Listen2Me.MVVM.Persistence;
 using Listen2Me.MVVM.Persistence.Entities;
-using Listen2Me.MVVM.Settings;
+using Listen2Me.MVVM.Services;
 using Listen2Me.MVVM.System;
 using Listen2Me.MVVM.System.Metadata;
-using Listen2Me.MVVM.TagEditor;
 using Listen2Me.MVVM.ViewModels.Shells;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -31,12 +28,10 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     private readonly IDialogManager _dialogManager;
     private readonly IAudioFolderScanner _folderScanner;
     private readonly IMetadataWriter _metadataWriter;
-    private readonly IMetadataReader _metadataReader;
-    private readonly ISettings _settings;
     private readonly IFileRenamer _fileRenamer;
-    private readonly IMessageQueue _messageQueue;
-    private readonly IFilenameToTagsParser _filenameToTagsParser;
-    private readonly ITagsToFilenameParser _tagsToFilenameParser;
+    private readonly IDragNDropController _dragNDropController;
+    private readonly IFileMoverService _fileMoverService;
+    private readonly IAutoTagFetcherService _tagFetcherService;
 
     [ObservableProperty] private ICollectionView _songView;
     [ObservableProperty] private ObservableCollection<Song> _songs = new();
@@ -45,21 +40,18 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     
     public TagEditorLayoutViewModel(IErrorHandler errorHandler, ILogger logger, IMessenger messenger, 
         ISharedDbContext dbContext, IDialogManager dialogManager, IAudioFolderScanner folderScanner, 
-        IMetadataWriter metadataWriter, IMetadataReader metadataReader, ISettings settings, IFileRenamer fileRenamer, 
-        IMessageQueue messageQueue, IFilenameToTagsParser filenameToTagsParser, 
-        ITagsToFilenameParser tagsToFilenameParser) 
+        IMetadataWriter metadataWriter, IFileRenamer fileRenamer, IDragNDropController dragNDropController, 
+        IFileMoverService fileMoverService, IAutoTagFetcherService tagFetcherService) 
         : base(errorHandler, logger, messenger)
     {
         _dbContext = dbContext;
         _dialogManager = dialogManager;
         _folderScanner = folderScanner;
         _metadataWriter = metadataWriter;
-        _metadataReader = metadataReader;
-        _settings = settings;
         _fileRenamer = fileRenamer;
-        _messageQueue = messageQueue;
-        _filenameToTagsParser = filenameToTagsParser;
-        _tagsToFilenameParser = tagsToFilenameParser;
+        _dragNDropController = dragNDropController;
+        _fileMoverService = fileMoverService;
+        _tagFetcherService = tagFetcherService;
     }
 
     public override Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -84,48 +76,7 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     /// <param name="paths"></param>
     public async Task HandleDroppedPaths(string[] paths)
     {
-        foreach (var path in paths)
-        {
-            try
-            {
-                if (File.Exists(path) && 
-                    Constants.SupportedAudioExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
-                {
-                    var toAdd = await _dbContext.Songs.FirstOrDefaultAsync(s => s.Path == path);
-                    if (toAdd is null)
-                    {
-                        toAdd = _metadataReader.Read(path);
-                    }
-                    
-                    if (!Songs.Contains(toAdd))
-                        Songs.Add(toAdd);
-                }
-                else if (Directory.Exists(path))
-                {
-                    List<Song> toAdd;
-                    if (_settings.Library.MusicFolders.Any(x => x.Path.Equals(path, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        toAdd = await _dbContext.Songs.Where(s => 
-                                EF.Functions.Like(s.Path, path + "%")).ToListAsync();
-                    }
-                    else
-                    {
-                        toAdd = await _folderScanner.ScanFolderAsync(path);
-                    }
-
-                    toAdd = toAdd.Except(Songs).ToList();
-                    Songs.AddRange(toAdd);
-                }
-                else
-                {
-                    Logger.Warning("Dropped path {Path} is not supported", path);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, "Failed to handle dropped path {Path}", path);
-            }
-        }
+        await _dragNDropController.AddDroppedPathsToCollection(Songs, paths);
     }
 
     #region Commands
@@ -163,42 +114,15 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     {
         if (SelectedSongs.Count == 0) return;
         Logger.Information("Tag Editor: Moving files");
-        var path = await _dialogManager.ShowDialogAsync<FolderBrowserDialogViewModel, string>();
-        if (string.IsNullOrEmpty(path)) return;
-
-        foreach (var song in SelectedSongs)
-        {
-            var fileName = Path.GetFileName(song.Path);
-            var newPath = Path.Combine(path, fileName);
-            
-            // the custom property changed event will trigger the file rename or move
-            song.Path = newPath;
-        }
+        await _fileMoverService.MoveFilesAsync(SelectedSongs);
     }
 
     [RelayCommand]
     private async Task FilenameToTags()
     {
         if (SelectedSongs.Count == 0) return;
-        
-        _messageQueue.Enqueue(new ForwardFirstSelectedSongMessage(SelectedSongs[0]));
-        _messageQueue.Enqueue(new FormulaDialogTypeMessage(true));
-        
-        Logger.Debug("Showing formula dialog to extract tags from filename");
-        var result = _dialogManager.ShowDialogAsync<TagEditorFormulaViewModel, bool>();
 
-        if (!await result)
-        {
-            Logger.Debug("Dialog returned false, aborting");
-            return;
-        }
-        
-        Logger.Debug("Editing tags for {0} songs", SelectedSongs.Count);
-        foreach (var song in SelectedSongs)
-        {
-            var tags = _filenameToTagsParser.Parse(song.FileName, _settings.TagEditor.FilenameToTagsFormula);
-            song.MapFromDictionary(tags);
-        }
+        await _tagFetcherService.FetchTagsFromFilenameAsync(SelectedSongs);
         
         Logger.Information("Tag Editor: Filename to tags completed for {0} songs", SelectedSongs.Count);
     }
@@ -207,24 +131,8 @@ public partial class TagEditorLayoutViewModel : ViewModelBase
     private async Task TagsToFilename()
     {
         if (SelectedSongs.Count == 0) return;
-        
-        _messageQueue.Enqueue(new ForwardFirstSelectedSongMessage(SelectedSongs[0]));
-        _messageQueue.Enqueue(new FormulaDialogTypeMessage(false));
-        var result = _dialogManager.ShowDialogAsync<TagEditorFormulaViewModel, bool>();
 
-        if (!await result)
-        {
-            return;
-        }
-
-        foreach (var song in SelectedSongs)
-        {
-            var newFilename =
-                _tagsToFilenameParser.Generate(song.MapToDictionary(), _settings.TagEditor.TagsToFilenameFormula);
-            if (string.IsNullOrEmpty(newFilename)) continue;
-            
-            song.FileName = newFilename;
-        }
+        await _tagFetcherService.FetchFilenameFromTagsAsync(SelectedSongs);
     }
 
     #endregion
