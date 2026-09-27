@@ -28,6 +28,9 @@
             <DataTemplate DataType="{x:Type layoutVm:SettingsLayoutViewModel}">
                 <layouts:SettingsLayout/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type layoutVm:TagEditorLayoutViewModel}">
+                <layouts:TagEditorLayout/>
+            </DataTemplate>
             
             <DataTemplate DataType="{x:Type settingsTabVm:AppearanceTabViewModel}">
                 <settingsTabs:AppearanceTab/>

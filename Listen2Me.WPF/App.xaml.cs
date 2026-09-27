@@ -123,7 +123,13 @@ public partial class App
                 services.AddSingleton<IViewRegistry, ViewRegistry>();
                 services.AddSingleton<IErrorHandler, LoggingErrorHandler>();
                 services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
-                services.AddSingleton<ILogger>(_ => Log.Logger);
+                services.AddSingleton<ILogger>(_ =>
+                {
+                    var config = new Serilog.LoggerConfiguration();
+                    config.MinimumLevel.Debug();
+                    config.WriteTo.Console();
+                    return config.CreateLogger();
+                });
                 services.AddSingleton<IUiDispatcher>(_ => new WpfUiDispatcher(Application.Current.Dispatcher));
 
                 var discoveredModules =

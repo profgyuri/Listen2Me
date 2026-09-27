@@ -16,4 +16,11 @@ public class SqLiteDataContext : DbContext
         
         optionsBuilder.UseSqlite(Constants.SqLiteConnectionString);
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<Song>().Property(s => s.Path).UseCollation("NOCASE");
+    }
 }

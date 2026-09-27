@@ -48,7 +48,8 @@ namespace Listen2Me.MVVM.Migrations.SqLite
 
                     b.Property<string>("Path")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("Title")
                         .IsRequired()

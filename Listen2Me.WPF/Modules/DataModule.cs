@@ -23,6 +23,7 @@ public class DataModule : IModule
 
         services.AddScoped<IAudioFolderScanner, AudioFolderScanner>();
         services.AddScoped<IMetadataReader, MetadataReader>();
+        services.AddScoped<IMetadataWriter, MetadataWriter>();
     }
 
     public void RegisterNavigation(INavigationRegistry registry)

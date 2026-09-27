@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Listen2Me.MVVM.Persistence.Syncing;
 
 namespace Listen2Me.MVVM.Persistence.Entities;
 
-public class Song(
+public partial class Song(
     Guid Id,
     string Artist,
     string Title,
@@ -13,21 +15,43 @@ public class Song(
     TimeSpan Length,
     string Path,
     long LengthBytes,
-    DateTime LastWrite) : ISyncableEntity
+    DateTime LastWrite) : ObservableObject, ISyncableEntity
 {
     [NotMapped] public string Display => 
         string.IsNullOrWhiteSpace(Artist) || string.IsNullOrWhiteSpace(Title) ? Path : $"{Artist} - {Title}";
 
-    public Guid Id { get; init; } = Id;
-    public string Artist { get; set; } = Artist;
-    public string Title { get; set; } = Title;
-    public string Genre { get; set; } = Genre;
-    public int Bpm { get; set; } = Bpm;
-    public int Bitrate { get; set; } = Bitrate;
-    public TimeSpan Length { get; set; } = Length;
-    public string Path { get; init; } = Path;
-    public long LengthBytes { get; set; } = LengthBytes;
-    public DateTime LastWrite { get; set; } = LastWrite;
+    [NotMapped] public string FileName
+    {
+        get => global::System.IO.Path.GetFileNameWithoutExtension(Path);
+        set
+        {
+            OnPropertyChanging();
+            var oldDirectory = global::System.IO.Path.GetDirectoryName(Path)!;
+            var extension = global::System.IO.Path.GetExtension(Path);
+            var newPath = global::System.IO.Path.Combine(oldDirectory, value + extension);
+            Path = newPath;
+            OnPropertyChanged();
+        }
+    }
+
+    [ObservableProperty] private Guid _id = Id;
+    [ObservableProperty] private string _artist = Artist;
+    [ObservableProperty] private string _title = Title;
+    [ObservableProperty] private string _genre = Genre;
+    [ObservableProperty] private int _bpm = Bpm;
+    [ObservableProperty] private int _bitrate = Bitrate;
+    [ObservableProperty] private TimeSpan _length = Length;
+    [ObservableProperty] private string _path = Path;
+    [ObservableProperty] private long _lengthBytes = LengthBytes;
+    [ObservableProperty] private DateTime _lastWrite = LastWrite;
+    
+    [NotMapped] public bool SuppressNotifications { get; set; }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        if (SuppressNotifications) return;
+        base.OnPropertyChanged(e);
+    }
 
     /// <summary>
     /// Maps the properties of the other song to this one.
@@ -47,4 +71,11 @@ public class Song(
 
         return this;
     }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Song other && Id == other.Id;
+    }
+
+    public override int GetHashCode() => Id.GetHashCode();
 }

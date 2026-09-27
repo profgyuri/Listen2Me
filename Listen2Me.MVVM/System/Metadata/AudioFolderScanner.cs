@@ -34,11 +34,14 @@ public class AudioFolderScanner : IAudioFolderScanner
         var allFiles = new List<string>();
         foreach (var folder in folders)
         {
+            if (!Directory.Exists(folder)) continue;
             var files = Directory.EnumerateFiles(folder, "*.*", SearchOption.TopDirectoryOnly)
                 .Where(IsSupportedAudioExtension)
                 .ToList();
             allFiles.AddRange(files);
         }
+        
+        if (allFiles.Count == 0) return;
         
         var results = new List<Song>(allFiles.Count);
         var processed = 0;
@@ -71,6 +74,39 @@ public class AudioFolderScanner : IAudioFolderScanner
         await _scanResultProcessor.AddOrUpdateResults(results, ct);
         await _scanResultProcessor.RemoveMissingResults(results, ct);
         await _dbContext.SaveChangesAsync(ct);
+    }
+
+    /// <inheritdoc/>
+    public async Task<List<Song>> ScanFolderAsync(string path, CancellationToken ct = default)
+    {
+        if (!Directory.Exists(path)) return [];
+        var files = Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly)
+            .Where(IsSupportedAudioExtension)
+            .ToList();
+
+        if (files.Count == 0) return [];
+        
+        var results = new List<Song>(files.Count);
+
+        await Task.Run(() =>
+        {
+            foreach (var file in files)
+            {
+                ct.ThrowIfCancellationRequested();
+                
+                try
+                {
+                    var metadata = _metadataReader.Read(file);
+                    results.Add(metadata);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "Failed to read metadata for file {FilePath}", file);
+                }
+            }
+        }, ct);
+        
+        return results;
     }
 
     private bool IsSupportedAudioExtension(string path)

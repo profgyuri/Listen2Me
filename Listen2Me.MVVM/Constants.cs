@@ -1,4 +1,7 @@
 ﻿using System.IO;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Listen2Me.Tests")]
 
 namespace Listen2Me.MVVM;
 
